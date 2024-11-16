@@ -2149,6 +2149,7 @@ set_src(ENGINE_GFX GLOB src/engine/gfx
   image_manipulation.h
 )
 set_src(GAME_SHARED GLOB src/game
+  alesstya_variables.h
   alloc.h
   collision.cpp
   collision.h
@@ -2326,10 +2327,14 @@ if(CLIENT)
     animstate.h
     component.cpp
     component.h
+    components/alesstya.cpp
+    components/alesstya.h
     components/background.cpp
     components/background.h
     components/binds.cpp
     components/binds.h
+    components/bindwheel.cpp
+    components/bindwheel.h
     components/broadcast.cpp
     components/broadcast.h
     components/camera.cpp
@@ -2383,6 +2388,8 @@ if(CLIENT)
     components/motd.h
     components/nameplates.cpp
     components/nameplates.h
+    components/outlines.cpp
+    components/outlines.h
     components/particles.cpp
     components/particles.h
     components/players.cpp
@@ -2391,6 +2398,8 @@ if(CLIENT)
     components/race_demo.h
     components/scoreboard.cpp
     components/scoreboard.h
+    components/skinprofiles.cpp
+    components/skinprofiles.h
     components/skins.cpp
     components/skins.h
     components/skins7.cpp
@@ -2403,6 +2412,8 @@ if(CLIENT)
     components/statboard.h
     components/tooltips.cpp
     components/tooltips.h
+    components/verify.cpp
+    components/verify.h
     components/voting.cpp
     components/voting.h
     gameclient.cpp

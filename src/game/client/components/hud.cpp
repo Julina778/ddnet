@@ -553,6 +553,44 @@ void CHud::RenderTextInfo()
 		str_format(aBuf, sizeof(aBuf), "%d", Client()->GetPredictionTime());
 		TextRender()->Text(m_Width - 10 - TextRender()->TextWidth(12, aBuf, -1, -1.0f), Showfps ? 20 : 5, 12, aBuf, -1.0f);
 	}
+
+	if(g_Config.m_ClNotifyWhenLast && GameClient()->m_GameInfo.m_EntitiesDDRace)
+	{
+		int NumInTeam = 0;
+		int NumFrozen = 0;
+		int LocalTeamID = m_pClient->m_Snap.m_SpecInfo.m_Active == 1 && m_pClient->m_Snap.m_SpecInfo.m_SpectatorId != -1 ?
+					  m_pClient->m_Teams.Team(m_pClient->m_Snap.m_SpecInfo.m_SpectatorId) :
+					  m_pClient->m_Teams.Team(m_pClient->m_Snap.m_LocalClientId);
+
+		for(int i = 0; i < MAX_CLIENTS; i++)
+		{
+			if(!m_pClient->m_Snap.m_apPlayerInfos[i])
+				continue;
+
+			if(m_pClient->m_Teams.Team(i) == LocalTeamID)
+			{
+				NumInTeam++;
+				if(m_pClient->m_aClients[i].m_FreezeEnd > 0 || m_pClient->m_aClients[i].m_DeepFrozen)
+					NumFrozen++;
+			}
+		}
+
+		// Notify when last
+		if(g_Config.m_ClNotifyWhenLast)
+		{
+			if(NumInTeam > 1 && NumInTeam - NumFrozen == 1)
+			{
+				char aBuf[64];
+				str_format(aBuf, sizeof(aBuf), "%s", g_Config.m_ClNotifyWhenLastText);
+				TextRender()->TextColor(color_cast<ColorRGBA>(ColorHSLA(g_Config.m_ClNotifyWhenLastColor)));
+				float xPos = g_Config.m_ClNotifyWhenLastXpos;
+				float yPos = g_Config.m_ClNotifyWhenLastYpos;
+				float fontSize = g_Config.m_ClNotifyWhenLastSize;
+				TextRender()->Text(xPos, yPos, fontSize, aBuf, -1.0f);
+				TextRender()->TextColor(1.0f, 1.0f, 1.0f, 1.0f);
+			}
+		}
+	}
 }
 
 void CHud::RenderConnectionWarning()

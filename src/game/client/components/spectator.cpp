@@ -17,6 +17,7 @@
 #include "spectator.h"
 
 #include <game/client/gameclient.h>
+#include <game/client/components/alesstya.h>
 
 bool CSpectator::CanChangeSpectator()
 {
@@ -608,6 +609,7 @@ void CSpectator::OnReset()
 
 void CSpectator::Spectate(int SpectatorId)
 {
+	AlesstyaGSL::Instance().m_SkinChooserId = SpectatorId;
 	if(Client()->State() == IClient::STATE_DEMOPLAYBACK)
 	{
 		m_pClient->m_DemoSpecId = clamp(SpectatorId, (int)SPEC_FOLLOW, MAX_CLIENTS - 1);

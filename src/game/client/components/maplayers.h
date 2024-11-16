@@ -32,7 +32,7 @@ class CMapLayers : public CComponent
 	CMapImages *m_pImages;
 
 	int m_Type;
-	bool m_OnlineOnly;
+	//bool m_OnlineOnly;
 
 	struct STileLayerVisuals
 	{
@@ -133,6 +133,8 @@ protected:
 	virtual bool CanRenderMenuBackground() { return true; }
 
 public:
+	bool m_OnlineOnly;
+
 	enum
 	{
 		TYPE_BACKGROUND = 0,

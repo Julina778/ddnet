@@ -776,6 +776,13 @@ bool CClient::DummyAllowed() const
 	return m_ServerCapabilities.m_AllowDummy;
 }
 
+int CClient::GetCurrentRaceTime()
+{
+	if(GameClient()->GetLastRaceTick() < 0)
+		return 0;
+	return (GameTick(g_Config.m_ClDummy) - GameClient()->GetLastRaceTick()) / GameTickSpeed();
+}
+
 void CClient::GetServerInfo(CServerInfo *pServerInfo) const
 {
 	mem_copy(pServerInfo, &m_CurrentServerInfo, sizeof(m_CurrentServerInfo));
@@ -2721,6 +2728,11 @@ void CClient::Update()
 
 					// send input
 					SendInput();
+				}
+
+				if(g_Config.m_ClFastInput && GameClient()->CheckNewInput())
+				{
+					Repredict = true;
 				}
 			}
 
@@ -4757,6 +4769,14 @@ int main(int argc, const char **argv)
 		pConsole->SetUnknownCommandCallback(IConsole::EmptyUnknownCommandCallback, nullptr);
 	}
 
+			// execute Alesstya config file
+	IOHANDLE File = pStorage->OpenFile(ACONFIG_FILE, IOFLAG_READ, IStorage::TYPE_ALL);
+	if(File)
+	{
+		io_close(File);
+		pConsole->ExecuteFile(ACONFIG_FILE);
+	}
+
 	// execute autoexec file
 	if(pStorage->FileExists(AUTOEXEC_CLIENT_FILE, IStorage::TYPE_ALL))
 	{
@@ -4978,12 +4998,25 @@ void CClient::GetSmoothTick(int *pSmoothTick, float *pSmoothIntraTick, float Mix
 {
 	int64_t GameTime = m_aGameTime[g_Config.m_ClDummy].Get(time_get());
 	int64_t PredTime = m_PredictedTime.Get(time_get());
+	GameTime = std::min(GameTime, PredTime);
 	int64_t SmoothTime = clamp(GameTime + (int64_t)(MixAmount * (PredTime - GameTime)), GameTime, PredTime);
 
-	*pSmoothTick = (int)(SmoothTime * GameTickSpeed() / time_freq()) + 1;
-	*pSmoothIntraTick = (SmoothTime - (*pSmoothTick - 1) * time_freq() / GameTickSpeed()) / (float)(time_freq() / GameTickSpeed());
+	*pSmoothTick = (int)(SmoothTime * GameTickSpeed() / time_freq()) + 1 + g_Config.m_ClFastInput;
+	*pSmoothIntraTick = (SmoothTime - (*pSmoothTick - 1 - g_Config.m_ClFastInput) * time_freq() / GameTickSpeed()) / (float)(time_freq() / GameTickSpeed());
 }
 
+void CClient::GetSmoothFreezeTick(int *pSmoothTick, float *pSmoothIntraTick, float MixAmount)
+{
+	int64_t GameTime = m_aGameTime[g_Config.m_ClDummy].Get(time_get());
+	int64_t PredTime = m_PredictedTime.Get(time_get());
+	GameTime = std::min(GameTime, PredTime);
+	int64_t UpperPredTime = clamp(PredTime - (time_freq() / 50) * g_Config.m_ClUnfreezeLagTicks, GameTime, PredTime);
+	int64_t LowestPredTime = clamp(PredTime, GameTime, UpperPredTime);
+	int64_t SmoothTime = clamp(LowestPredTime + (int64_t)(MixAmount * (PredTime - LowestPredTime)), LowestPredTime, PredTime);
+
+	*pSmoothTick = (int)(SmoothTime * 50 / time_freq()) + 1 + g_Config.m_ClFastInput;
+	*pSmoothIntraTick = (SmoothTime - (*pSmoothTick - 1 - g_Config.m_ClFastInput) * time_freq() / 50) / (float)(time_freq() / 50);
+}
 void CClient::AddWarning(const SWarning &Warning)
 {
 	m_vWarnings.emplace_back(Warning);

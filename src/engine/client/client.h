@@ -286,6 +286,7 @@ public:
 	// Send via the currently active client (main/dummy)
 	int SendMsgActive(CMsgPacker *pMsg, int Flags) override;
 
+	// void SendTaterInfo(int Conn); // Alesstya send info
 	void SendInfo(int Conn);
 	void SendEnterGame(int Conn);
 	void SendReady(int Conn);
@@ -487,6 +488,8 @@ public:
 	void GenerateTimeoutSeed() override;
 	void GenerateTimeoutCodes(const NETADDR *pAddrs, int NumAddrs);
 
+	int GetCurrentRaceTime() override;
+
 	const char *GetCurrentMap() const override;
 	const char *GetCurrentMapPath() const override;
 	SHA256_DIGEST GetCurrentMapSha256() const override;
@@ -506,6 +509,7 @@ public:
 	IFriends *Foes() override { return &m_Foes; }
 
 	void GetSmoothTick(int *pSmoothTick, float *pSmoothIntraTick, float MixAmount) override;
+	void GetSmoothFreezeTick(int *pSmoothTick, float *pSmoothIntraTick, float MixAmount) override;
 
 	void AddWarning(const SWarning &Warning) override;
 	SWarning *GetCurWarning() override;

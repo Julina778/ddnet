@@ -49,6 +49,9 @@
 #include "components/motd.h"
 #include "components/nameplates.h"
 #include "components/particles.h"
+#include "components/verify.h"
+#include "components/bindwheel.h"
+#include "components/alesstya.h"
 #include "components/players.h"
 #include "components/race_demo.h"
 #include "components/scoreboard.h"
@@ -59,6 +62,8 @@
 #include "components/statboard.h"
 #include "components/tooltips.h"
 #include "components/voting.h"
+#include "components/skinprofiles.h"
+#include "components/outlines.h"
 
 class CGameInfo
 {
@@ -124,6 +129,7 @@ class CGameClient : public IGameClient
 {
 public:
 	// all components
+	CAlesstya m_Alesstya;
 	CInfoMessages m_InfoMessages;
 	CCamera m_Camera;
 	CChat m_Chat;
@@ -131,6 +137,7 @@ public:
 	CBroadcast m_Broadcast;
 	CGameConsole m_GameConsole;
 	CBinds m_Binds;
+	CSkinProfiles m_SkinProfiles;
 	CParticles m_Particles;
 	CMenus m_Menus;
 	CSkins m_Skins;
@@ -145,11 +152,14 @@ public:
 	CStatboard m_Statboard;
 	CSounds m_Sounds;
 	CEmoticon m_Emoticon;
+	CBindWheel m_Bindwheel;
 	CDamageInd m_DamageInd;
 	CVoting m_Voting;
+	CVerify m_Verify;
 	CSpectator m_Spectator;
 
 	CPlayers m_Players;
+	COutlines m_Outlines;
 	CNamePlates m_NamePlates;
 	CFreezeBars m_FreezeBars;
 	CItems m_Items;
@@ -209,7 +219,7 @@ private:
 	int m_aLastNewPredictedTick[NUM_DUMMIES];
 
 	int m_LastRoundStartTick;
-	int m_LastRaceTick;
+	//int m_LastRaceTick;
 
 	int m_LastFlagCarrierRed;
 	int m_LastFlagCarrierBlue;
@@ -580,8 +590,7 @@ public:
 
 	int IntersectCharacter(vec2 HookPos, vec2 NewPos, vec2 &NewPos2, int OwnId);
 
-	int LastRaceTick() const;
-	int CurrentRaceTime() const;
+	int GetLastRaceTick() const override;
 
 	bool IsTeamPlay() { return m_Snap.m_pGameInfoObj && m_Snap.m_pGameInfoObj->m_GameFlags & GAMEFLAG_TEAMS; }
 
@@ -598,6 +607,7 @@ public:
 	CGameWorld m_GameWorld;
 	CGameWorld m_PredictedWorld;
 	CGameWorld m_PrevPredictedWorld;
+	CGameWorld m_ExtraPredictedWorld;
 
 	std::vector<SSwitchers> &Switchers() { return m_GameWorld.m_Core.m_vSwitchers; }
 	std::vector<SSwitchers> &PredSwitchers() { return m_PredictedWorld.m_Core.m_vSwitchers; }
@@ -610,6 +620,8 @@ public:
 	bool CanDisplayWarning() const override;
 	CNetObjHandler *GetNetObjHandler() override;
 	protocol7::CNetObjHandler *GetNetObjHandler7() override;
+
+	bool CheckNewInput() override;
 
 	void LoadGameSkin(const char *pPath, bool AsDir = false);
 	void LoadEmoticonsSkin(const char *pPath, bool AsDir = false);
@@ -780,6 +792,9 @@ public:
 
 	const std::vector<CSnapEntities> &SnapEntities() { return m_vSnapEntities; }
 
+	vec2 GetSmoothPos(int ClientId); // Alesstya1
+	vec2 GetFreezePos(int ClientId);
+
 	int m_MultiViewTeam;
 	int m_MultiViewPersonalZoom;
 	bool m_MultiViewShowHud;
@@ -803,7 +818,7 @@ private:
 	int m_aLastUpdateTick[MAX_CLIENTS] = {0};
 	void DetectStrongHook();
 
-	vec2 GetSmoothPos(int ClientId);
+	//vec2 GetSmoothPos(int ClientId);
 
 	int m_PredictedDummyId;
 	int m_IsDummySwapping;

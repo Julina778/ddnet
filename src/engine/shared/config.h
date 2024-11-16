@@ -18,6 +18,7 @@
 #define AUTOEXEC_FILE "autoexec.cfg"
 #define AUTOEXEC_CLIENT_FILE "autoexec_client.cfg"
 #define AUTOEXEC_SERVER_FILE "autoexec_server.cfg"
+#define ACONFIG_FILE "settings_alesstya.cfg"
 
 class CConfig
 {
@@ -212,6 +213,7 @@ class CConfigManager : public IConfigManager
 		}
 	};
 	std::vector<SCallback> m_vCallbacks;
+	std::vector<SCallback> m_vACallbacks;
 
 	std::vector<SConfigVariable *> m_vpAllVariables;
 	std::vector<SConfigVariable *> m_vpGameVariables;
@@ -230,9 +232,11 @@ public:
 	void ResetGameSettings() override;
 	void SetReadOnly(const char *pScriptName, bool ReadOnly) override;
 	bool Save() override;
+	bool ASave() override;
 	CConfig *Values() override { return &g_Config; }
 
 	void RegisterCallback(SAVECALLBACKFUNC pfnFunc, void *pUserData) override;
+	void RegisterACallback(SAVECALLBACKFUNC pfnFunc, void *pUserData) override;
 
 	void WriteLine(const char *pLine) override;
 
