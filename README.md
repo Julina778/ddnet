@@ -16,7 +16,7 @@ Cloning
 
 To clone this repository with full history and external libraries (~350 MB):
 
-    git clone --recursive https://github.com/ddnet/ddnet
+    git clone --recursive https://github.com/Julina778/ddnet.git
 
 To clone this repository with full history when you have the necessary libraries on your system already (~220 MB):
 
