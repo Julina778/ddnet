@@ -32,7 +32,7 @@ git clone --depth 1 https://github.com/ddnet/ddnet
 To clone this repository with external libraries and full history (~1 GiB):
 
 ```sh
-git clone --recursive https://github.com/ddnet/ddnet
+git clone --recursive https://github.com/Julina778/ddnet
 ```
 
 To clone this repository when you have the necessary libraries on your system already with full history (~450 MiB):
