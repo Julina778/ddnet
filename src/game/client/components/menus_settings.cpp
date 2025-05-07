@@ -167,7 +167,7 @@ void CMenus::RenderSettingsGeneral(CUIRect MainView)
 		static CButtonContainer s_SettingsButtonId;
 		if(DoButton_Menu(&s_SettingsButtonId, Localize("Settings file"), 0, &SettingsButton))
 		{
-			Storage()->GetCompletePath(IStorage::TYPE_SAVE, CONFIG_FILE, aBuf, sizeof(aBuf));
+			Storage()->GetCompletePath(IStorage::TYPE_SAVE, s_aConfigDomains[ConfigDomain::DDNET].m_aConfigPath, aBuf, sizeof(aBuf)); // Alesstya1
 			Client()->ViewFile(aBuf);
 		}
 		GameClient()->m_Tooltips.DoToolTip(&s_SettingsButtonId, &SettingsButton, Localize("Open the settings file"));

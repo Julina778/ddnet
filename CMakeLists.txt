@@ -2051,7 +2051,10 @@ set_src(ENGINE_SHARED GLOB_RECURSE src/engine/shared
   compression.h
   config.cpp
   config.h
+  config_domains.h # // Alesstya1
+  config_includes.h
   config_variables.h
+  config_variables_alesstya.h # // Alesstya2
   console.cpp
   console.h
   csv.cpp
