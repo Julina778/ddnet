@@ -2395,6 +2395,8 @@ if(CLIENT)
     components/spectator.h
     components/statboard.cpp
     components/statboard.h
+    components/alesstya/outlines.cpp # // Alesstya1
+    components/alesstya/outlines.h # // Alesstya2
     components/tooltips.cpp
     components/tooltips.h
     components/touch_controls.cpp

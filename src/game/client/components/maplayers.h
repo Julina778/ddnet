@@ -33,7 +33,7 @@ class CMapLayers : public CComponent
 	CMapImages *m_pImages;
 
 	int m_Type;
-	bool m_OnlineOnly;
+	//bool m_OnlineOnly; // Alesstya1 public
 
 	struct STileLayerVisuals
 	{
@@ -132,6 +132,7 @@ class CMapLayers : public CComponent
 	virtual const char *LoadingTitle() const;
 
 public:
+	bool m_OnlineOnly; // Alesstya1
 	enum
 	{
 		TYPE_BACKGROUND = 0,
