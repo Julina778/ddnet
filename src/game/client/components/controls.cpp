@@ -188,8 +188,8 @@ int CControls::SnapInput(int *pData)
 	else
 		m_aInputData[g_Config.m_ClDummy].m_PlayerFlags = PLAYERFLAG_PLAYING;
 
-	if(m_pClient->m_Scoreboard.IsActive())
-		m_aInputData[g_Config.m_ClDummy].m_PlayerFlags |= PLAYERFLAG_SCOREBOARD;
+	if(m_pClient->m_Scoreboard.IsActive() || g_Config.m_ClPingNameCircle) // Alesstya1
+		m_aInputData[g_Config.m_ClDummy].m_PlayerFlags |= PLAYERFLAG_SCOREBOARD; // Alesstya2
 
 	if(Client()->ServerCapAnyPlayerFlag() && m_pClient->m_Controls.m_aShowHookColl[g_Config.m_ClDummy])
 		m_aInputData[g_Config.m_ClDummy].m_PlayerFlags |= PLAYERFLAG_AIM;

@@ -440,6 +440,80 @@ public:
 		CNamePlatePartText(This) {}
 };
 
+class CNamePlatePartPing : public CNamePlatePart // Alesstya1
+{
+protected:
+	float m_Radius = 7.0f;
+	ColorRGBA m_Color;
+
+public:
+	friend class CGameClient;
+	void Update(CGameClient &This, const CNamePlateData &Data) override
+	{
+		/*
+			If in a real game,
+				Don't show ping in demos
+				Show other people's pings if in scoreboard
+				Or if ping circle and name enabled
+			If in preview
+				Show ping if ping circle and name enabled
+		*/
+		m_Visible = Data.m_InGame ? (
+						    This.Client()->State() != IClient::STATE_DEMOPLAYBACK && ((Data.m_ShowName && g_Config.m_ClPingNameCircle > 0) ||
+														     (This.m_Scoreboard.IsActive() && !This.m_Snap.m_apPlayerInfos[Data.m_ClientId]->m_Local))) :
+					    (
+						    (Data.m_ShowName && g_Config.m_ClPingNameCircle > 0));
+		if(!m_Visible)
+			return;
+		int ping = Data.m_InGame ? This.m_Snap.m_apPlayerInfos[Data.m_ClientId]->m_Latency : (1 + Data.m_ClientId) * 25;
+		m_Color = color_cast<ColorRGBA>(ColorHSLA((float)(300 - clamp(ping, 0, 300)) / 1000.0f, 1.0f, 0.5f, Data.m_Color.a));
+	}
+	void Render(CGameClient &This, vec2 Pos) const override
+	{
+		This.Graphics()->TextureClear();
+		This.Graphics()->QuadsBegin();
+		This.Graphics()->SetColor(m_Color);
+		This.Graphics()->DrawCircle(Pos.x, Pos.y, m_Radius, 24);
+		This.Graphics()->QuadsEnd();
+	}
+	CNamePlatePartPing(CGameClient &This) :
+		CNamePlatePart(This)
+	{
+		m_Size = vec2(m_Radius, m_Radius) * 2.0f;
+	}
+};
+
+class CNamePlatePartSkin : public CNamePlatePartText
+{
+private:
+	char m_aText[MAX_CLAN_LENGTH] = "";
+	float m_FontSize = -INFINITY;
+
+protected:
+	bool UpdateNeeded(CGameClient &This, const CNamePlateData &Data) override
+	{
+		m_Visible = Data.m_InGame ? g_Config.m_ClShowSkinName > (This.m_Snap.m_apPlayerInfos[Data.m_ClientId]->m_Local ? 1 : 0) : g_Config.m_ClShowSkinName > 0;
+		if(!m_Visible)
+			return false;
+		m_Color = Data.m_Color;
+		const char *pSkin = Data.m_InGame ? This.m_aClients[Data.m_ClientId].m_aSkinName : (Data.m_ClientId == 0 ? g_Config.m_ClPlayerSkin : g_Config.m_ClDummySkin);
+		return m_FontSize != Data.m_FontSizeClan || str_comp(m_aText, pSkin) != 0;
+	}
+	void UpdateText(CGameClient &This, const CNamePlateData &Data) override
+	{
+		m_FontSize = Data.m_FontSizeClan;
+		const char *pSkin = Data.m_InGame ? This.m_aClients[Data.m_ClientId].m_aSkinName : (Data.m_ClientId == 0 ? g_Config.m_ClPlayerSkin : g_Config.m_ClDummySkin);
+		str_copy(m_aText, pSkin, sizeof(m_aText));
+		CTextCursor Cursor;
+		This.TextRender()->SetCursor(&Cursor, 0.0f, 0.0f, m_FontSize, TEXTFLAG_RENDER);
+		This.TextRender()->CreateOrAppendTextContainer(m_TextContainerIndex, &Cursor, m_aText);
+	}
+
+public:
+	CNamePlatePartSkin(CGameClient &This) :
+		CNamePlatePartText(This) {}
+}; // Alesstya2
+
 // Name Plates
 
 class CNamePlate
@@ -482,6 +556,7 @@ private:
 		AddPart<CNamePlatePartDirection>(This, DIRECTION_RIGHT);
 		AddPart<CNamePlatePartNewLine>(This);
 
+		AddPart<CNamePlatePartPing>(This); // Alesstya1
 		AddPart<CNamePlatePartFriendMark>(This);
 		AddPart<CNamePlatePartClientId>(This, false);
 		AddPart<CNamePlatePartName>(This);
@@ -489,6 +564,9 @@ private:
 
 		AddPart<CNamePlatePartClan>(This);
 		AddPart<CNamePlatePartNewLine>(This);
+
+		AddPart<CNamePlatePartSkin>(This); // Alesstya1
+		AddPart<CNamePlatePartNewLine>(This); // Alesstya2
 
 		AddPart<CNamePlatePartClientId>(This, true);
 		AddPart<CNamePlatePartNewLine>(This);
