@@ -24,6 +24,7 @@
 #include <game/generated/protocolglue.h>
 
 // components
+#include "components/alesstya/outlines.h" // Alesstya1
 #include "components/background.h"
 #include "components/binds.h"
 #include "components/broadcast.h"
@@ -58,7 +59,6 @@
 #include "components/sounds.h"
 #include "components/spectator.h"
 #include "components/statboard.h"
-#include "components/alesstya/outlines.h" // Alesstya1
 #include "components/tooltips.h"
 #include "components/touch_controls.h"
 #include "components/voting.h"
