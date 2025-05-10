@@ -587,10 +587,10 @@ void CHud::RenderTextInfo()
 				char aBuf[64];
 				str_format(aBuf, sizeof(aBuf), "%s", g_Config.m_ClNotifyWhenLastText);
 				TextRender()->TextColor(color_cast<ColorRGBA>(ColorHSLA(g_Config.m_ClNotifyWhenLastColor)));
-				float xPos = g_Config.m_ClNotifyWhenLastXpos;
-				float yPos = g_Config.m_ClNotifyWhenLastYpos;
-				float fontSize = g_Config.m_ClNotifyWhenLastSize;
-				TextRender()->Text(xPos, yPos, fontSize, aBuf, -1.0f);
+				float XPos = g_Config.m_ClNotifyWhenLastXpos;
+				float YPos = g_Config.m_ClNotifyWhenLastYpos;
+				float FontSize = g_Config.m_ClNotifyWhenLastSize;
+				TextRender()->Text(XPos, YPos, FontSize, aBuf, -1.0f);
 				TextRender()->TextColor(1.0f, 1.0f, 1.0f, 1.0f);
 			}
 		}

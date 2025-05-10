@@ -2320,7 +2320,9 @@ if(CLIENT)
     animstate.h
     component.cpp
     component.h
-    components/alesstya/outlines.cpp # // Alesstya1
+    components/alesstya/bindwheel.cpp # // Alesstya1
+    components/alesstya/bindwheel.h
+    components/alesstya/outlines.cpp
     components/alesstya/outlines.h # // Alesstya2
     components/background.cpp
     components/background.h
