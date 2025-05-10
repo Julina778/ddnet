@@ -2323,7 +2323,9 @@ if(CLIENT)
     components/alesstya/bindwheel.cpp # // Alesstya1
     components/alesstya/bindwheel.h
     components/alesstya/outlines.cpp
-    components/alesstya/outlines.h # // Alesstya2
+    components/alesstya/outlines.h
+    components/alesstya/skinprofiles.cpp
+    components/alesstya/skinprofiles.h # // Alesstya2
     components/background.cpp
     components/background.h
     components/binds.cpp

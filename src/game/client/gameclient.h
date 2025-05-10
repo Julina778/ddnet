@@ -25,7 +25,8 @@
 
 // components
 #include "components/alesstya/bindwheel.h" // Alesstya1
-#include "components/alesstya/outlines.h" // Alesstya2
+#include "components/alesstya/outlines.h"
+#include "components/alesstya/skinprofiles.h" // Alesstya2
 #include "components/background.h"
 #include "components/binds.h"
 #include "components/broadcast.h"
@@ -177,6 +178,7 @@ public:
 	CTooltips m_Tooltips;
 
 	// Alesstya1
+	CSkinProfiles m_SkinProfiles;
 	CBindWheel m_BindWheel;
 	COutlines m_Outlines;
 
