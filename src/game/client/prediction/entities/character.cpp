@@ -997,6 +997,13 @@ void CCharacter::DDRaceTick()
 		}
 		if(m_FreezeTime == 1)
 			UnFreeze();
+		m_AliveAccumulation = std::min(m_AliveAccumulation - 1, 0); // Alesstya1
+		m_AliveAccumulation = std::max(m_AliveAccumulation, -g_Config.m_ClUnfreezeLagDelayTicks);
+	}
+	else
+	{
+		m_AliveAccumulation = std::max(m_AliveAccumulation, 1);
+		m_AliveAccumulation = std::min(m_AliveAccumulation + 1, g_Config.m_ClUnfreezeLagDelayTicks); // Alesstya2
 	}
 
 	HandleTuneLayer();
@@ -1016,6 +1023,14 @@ void CCharacter::DDRaceTick()
 			break;
 		}
 	}
+	if(m_Core.m_IsInFreeze && IsGrounded()) // Alesstya1
+	{
+		m_FreezeAccumulation = std::min(m_FreezeAccumulation + 1, g_Config.m_ClUnfreezeLagDelayTicks);
+	}
+	else
+	{
+		m_FreezeAccumulation = std::min(m_FreezeAccumulation, m_FreezeTime);
+	} // Alesstya2
 	m_Core.m_IsInFreeze |= (Collision()->GetCollisionAt(m_Pos.x + GetProximityRadius() / 3.f, m_Pos.y - GetProximityRadius() / 3.f) == TILE_DEATH ||
 				Collision()->GetCollisionAt(m_Pos.x + GetProximityRadius() / 3.f, m_Pos.y + GetProximityRadius() / 3.f) == TILE_DEATH ||
 				Collision()->GetCollisionAt(m_Pos.x - GetProximityRadius() / 3.f, m_Pos.y - GetProximityRadius() / 3.f) == TILE_DEATH ||
