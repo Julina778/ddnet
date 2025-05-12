@@ -1819,6 +1819,9 @@ CUi::EPopupMenuFunctionResult CUi::PopupSelection(void *pContext, CUIRect View, 
 	size_t Index = 0;
 	for(const auto &Entry : pSelectionPopup->m_vEntries)
 	{
+		if(pSelectionPopup->m_SpecialFontRenderMode) // Alesstya1
+			pUI->TextRender()->SetCustomFace(Entry.c_str()); // Alesstya2
+
 		if(pSelectionPopup->m_aMessage[0] != '\0' || Index != 0)
 			View.HSplitTop(pSelectionPopup->m_EntrySpacing, nullptr, &View);
 		View.HSplitTop(pSelectionPopup->m_EntryHeight, &Slot, &View);
@@ -1832,6 +1835,9 @@ CUi::EPopupMenuFunctionResult CUi::PopupSelection(void *pContext, CUIRect View, 
 		}
 		++Index;
 	}
+
+	if(pSelectionPopup->m_SpecialFontRenderMode) // Alesstya1
+		pUI->TextRender()->SetCustomFace(g_Config.m_ClCustomFont); // Alesstya2
 
 	pScrollRegion->End();
 

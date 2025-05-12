@@ -493,7 +493,7 @@ void CPlayers::RenderPlayer(
 		Position = m_pClient->m_aClients[ClientId].m_RenderPos;
 	else
 		Position = mix(vec2(Prev.m_X, Prev.m_Y), vec2(Player.m_X, Player.m_Y), IntraTick);
-	
+
 	if(g_Config.m_ClSwapGhosts && g_Config.m_ClShowOthersGhosts && !Local && Client()->State() != IClient::STATE_DEMOPLAYBACK) // Alesstya1
 		if(ClientId >= 0)
 			Position = mix(

@@ -23,6 +23,18 @@
 
 using namespace std::chrono_literals;
 
+static void ReplaceHyphensWithSpaces(char *pStr) // Alesstya1
+{
+	if(pStr == nullptr)
+		return;
+	while(*pStr)
+	{
+		if(*pStr == '-')
+			*pStr = ' ';
+		pStr++;
+	}
+} // Alesstya2
+
 enum
 {
 	FONT_NAME_SIZE = 128,
@@ -351,6 +363,14 @@ private:
 			{
 				FamilyNameMatch = CurrentFace;
 			}
+
+			char aBuf[256]; // Alesstya1
+			str_copy(aBuf, FT_Get_Postscript_Name(CurrentFace));
+			ReplaceHyphensWithSpaces(aBuf);
+			if(!FamilyNameMatch && str_comp(pFamilyName, aBuf) == 0)
+			{
+				FamilyNameMatch = CurrentFace;
+			} // Alesstya2
 		}
 
 		return FamilyNameMatch;
@@ -603,6 +623,8 @@ public:
 			delete[] pTextureData;
 		}
 	}
+
+	std::vector<FT_Face> *GetFaces() { return &m_vFtFaces; } // Alesstya1
 
 	FT_Face DefaultFace() const
 	{
@@ -959,6 +981,9 @@ class CTextRender : public IEngineTextRender
 
 	std::chrono::nanoseconds m_CursorRenderTime;
 
+	std::vector<std::string> m_CustomFontFaces; // Alesstya1
+	std::vector<std::string> m_DefaultFontFaces; // Alesstya2
+
 	int GetFreeTextContainerIndex()
 	{
 		if(m_FirstFreeTextContainerIndex == -1)
@@ -1154,6 +1179,86 @@ public:
 		m_pStorage = nullptr;
 	}
 
+	// TClient // Alesstya1
+	static int LaziestFileCallback(const char *pFilename, int IsDir, int StorageType, void *pUser)
+	{
+		std::vector<std::string> *pVector = static_cast<std::vector<std::string> *>(pUser);
+		if(IsDir)
+			return 0;
+		pVector->emplace_back(pFilename);
+		return 0;
+	}
+	// TClient
+	void CheckDefaultFaces()
+	{
+		for(const auto &CurrentFace : *m_pGlyphMap->GetFaces())
+		{
+			char aBuf[256];
+			str_copy(aBuf, FT_Get_Postscript_Name(CurrentFace));
+			ReplaceHyphensWithSpaces(aBuf);
+			m_DefaultFontFaces.emplace_back(aBuf);
+		}
+	}
+	// TClient
+	void UpdateCustomFontList()
+	{
+		std::vector<std::string> vAllFaces;
+		for(const auto &CurrentFace : *m_pGlyphMap->GetFaces())
+		{
+			char aBuf[256];
+			str_copy(aBuf, FT_Get_Postscript_Name(CurrentFace));
+			ReplaceHyphensWithSpaces(aBuf);
+			vAllFaces.emplace_back(aBuf);
+		}
+
+		m_CustomFontFaces.clear();
+		m_CustomFontFaces.emplace_back("DejaVu Sans");
+		for(const auto &Face : vAllFaces)
+			if(std::find(m_DefaultFontFaces.begin(), m_DefaultFontFaces.end(), Face) == m_DefaultFontFaces.end())
+				m_CustomFontFaces.push_back(Face);
+	}
+	// TClient
+	void LoadCustomFonts()
+	{
+		CheckDefaultFaces();
+		std::vector<std::string> vCustomFonts;
+		Storage()->ListDirectory(IStorage::TYPE_ALL, "alesstya/fonts", LaziestFileCallback, &vCustomFonts);
+		std::sort(vCustomFonts.begin(), vCustomFonts.end());
+		for(const std::string &FilePath : vCustomFonts)
+		{
+			char aFontName[IO_MAX_PATH_LENGTH];
+			str_format(aFontName, sizeof(aFontName), "alesstya/fonts/%s", FilePath.c_str());
+			void *pFontData;
+			unsigned FontDataSize;
+			if(Storage()->ReadFile(aFontName, IStorage::TYPE_ALL, &pFontData, &FontDataSize))
+			{
+				if(LoadFontCollection(aFontName, static_cast<FT_Byte *>(pFontData), (FT_Long)FontDataSize))
+				{
+					m_vpFontData.push_back(pFontData);
+				}
+				else
+				{
+					free(pFontData);
+				}
+			}
+			else
+			{
+				log_error("textrender", "Failed to open/read font file '%s'", aFontName);
+			}
+		}
+		UpdateCustomFontList();
+	}
+	// TClient
+	std::vector<std::string> *GetCustomFaces() override
+	{
+		return &m_CustomFontFaces;
+	}
+	// TClient
+	void SetCustomFace(const char *pFace) override
+	{
+		m_pGlyphMap->SetDefaultFaceByName(pFace);
+	} // Alesstya2
+
 	bool LoadFonts() override
 	{
 		// read file data into buffer
@@ -1239,6 +1344,9 @@ public:
 			log_error("textrender", "Font index malformed: 'default' must be a string");
 			Success = false;
 		}
+		// TClient // Alesstya1
+		LoadCustomFonts();
+		m_pGlyphMap->AddFallbackFaceByName("DejaVu Sans"); // Alesstya2
 
 		// extract language variant family names
 		const json_value &Variants = (*pJsonData)["language variants"];

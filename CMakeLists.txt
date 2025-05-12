@@ -997,6 +997,15 @@ endif()
 set(EXPECTED_DATA
   announcement.txt
   arrow.png
+  alesstya/fonts/Cabin-Regular.ttf # // Alesstya1
+  alesstya/fonts/FreeSansBold.ttf
+  alesstya/fonts/GoogleSans-Regular.ttf
+  alesstya/fonts/Inter_24pt-Regular.ttf
+  alesstya/fonts/Inter_24pt-SemiBold.ttf
+  alesstya/fonts/Montserrat-Regular.ttf
+  alesstya/fonts/Nunito-Black.ttf
+  alesstya/fonts/Rubik-Regular.ttf
+  alesstya/fonts/minecraft_font.ttf
   assets/entities/comfort/ddnet.png
   assets/entities/license.txt
   assets/game/game_06.png
@@ -2320,7 +2329,9 @@ if(CLIENT)
     animstate.h
     component.cpp
     component.h
-    components/alesstya/bindwheel.cpp # // Alesstya1
+    components/alesstya/alesstya.cpp # // Alesstya1
+    components/alesstya/alesstya.h
+    components/alesstya/bindwheel.cpp
     components/alesstya/bindwheel.h
     components/alesstya/outlines.cpp
     components/alesstya/outlines.h

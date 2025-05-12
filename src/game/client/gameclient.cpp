@@ -133,7 +133,7 @@ void CGameClient::OnConsoleInit()
 					      &m_Particles.m_RenderTrail,
 					      &m_Particles.m_RenderTrailExtra,
 					      &m_Items,
-					      &m_Trails,// Alesstya1
+					      &m_Trails, // Alesstya1
 					      &m_Ghost,
 					      &m_Players,
 					      &m_MapLayersForeground,
@@ -144,6 +144,7 @@ void CGameClient::OnConsoleInit()
 					      &m_Particles.m_RenderGeneral,
 					      &m_FreezeBars,
 					      &m_DamageInd,
+					      &m_Alesstya, // Alesstya1
 					      &m_Hud,
 					      &m_Spectator,
 					      &m_Emoticon,

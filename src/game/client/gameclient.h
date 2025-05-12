@@ -24,7 +24,8 @@
 #include <game/generated/protocolglue.h>
 
 // components
-#include "components/alesstya/bindwheel.h" // Alesstya1
+#include "components/alesstya/alesstya.h" // Alesstya1
+#include "components/alesstya/bindwheel.h"
 #include "components/alesstya/outlines.h"
 #include "components/alesstya/skinprofiles.h"
 #include "components/alesstya/trails.h" // Alesstya2
@@ -133,6 +134,8 @@ enum class EClientIdFormat
 class CGameClient : public IGameClient
 {
 public:
+	friend class CAlesstya;
+	
 	// all components
 	CInfoMessages m_InfoMessages;
 	CCamera m_Camera;
@@ -181,6 +184,7 @@ public:
 	// Alesstya1
 	CSkinProfiles m_SkinProfiles;
 	CBindWheel m_BindWheel;
+	CAlesstya m_Alesstya;
 	CTrails m_Trails;
 	COutlines m_Outlines;
 
