@@ -1,5 +1,5 @@
-#ifndef GAME_CLIENT_COMPONENTS_ALESSTYA_H
-#define GAME_CLIENT_COMPONENTS_ALESSTYA_H
+#ifndef GAME_CLIENT_COMPONENTS_ALESSTYA_ALESSTYA_H
+#define GAME_CLIENT_COMPONENTS_ALESSTYA_ALESSTYA_H
 
 #include <engine/console.h>
 #include <game/client/component.h>
