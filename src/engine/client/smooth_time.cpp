@@ -3,8 +3,8 @@
 
 #include <base/math.h>
 #include <base/system.h>
-
 #include <engine/shared/config.h> // Alesstya1
+
 #include "graph.h"
 #include "smooth_time.h"
 

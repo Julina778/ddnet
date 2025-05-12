@@ -26,7 +26,8 @@
 // components
 #include "components/alesstya/bindwheel.h" // Alesstya1
 #include "components/alesstya/outlines.h"
-#include "components/alesstya/skinprofiles.h" // Alesstya2
+#include "components/alesstya/skinprofiles.h"
+#include "components/alesstya/trails.h" // Alesstya2
 #include "components/background.h"
 #include "components/binds.h"
 #include "components/broadcast.h"
@@ -180,6 +181,7 @@ public:
 	// Alesstya1
 	CSkinProfiles m_SkinProfiles;
 	CBindWheel m_BindWheel;
+	CTrails m_Trails;
 	COutlines m_Outlines;
 
 private:

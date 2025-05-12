@@ -133,6 +133,7 @@ void CGameClient::OnConsoleInit()
 					      &m_Particles.m_RenderTrail,
 					      &m_Particles.m_RenderTrailExtra,
 					      &m_Items,
+					      &m_Trails,// Alesstya1
 					      &m_Ghost,
 					      &m_Players,
 					      &m_MapLayersForeground,
@@ -2519,7 +2520,7 @@ void CGameClient::OnPredict()
 	} // Alesstya2
 
 	// detect mispredictions of other players and make corrections smoother when possible
-	 // Alesstya1
+	// Alesstya1
 	if(g_Config.m_ClAntiPingSmooth &&
 		Predict() && AntiPingPlayers() &&
 		m_NewTick && m_PredictedTick >= MIN_TICK &&
@@ -3934,7 +3935,6 @@ vec2 CGameClient::GetFreezePos(int ClientId) // Alesstya1
 	}
 	return Pos;
 } // Alesstya1
-
 
 void CGameClient::Echo(const char *pString)
 {

@@ -185,8 +185,8 @@ MACRO_CONFIG_INT(ClTeeTrailLength, al_tee_trail_length, 25, 5, 200, CFGFLAG_CLIE
 MACRO_CONFIG_INT(ClTeeTrailAlpha, al_tee_trail_alpha, 80, 1, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Tee trail alpha")
 MACRO_CONFIG_COL(ClTeeTrailColor, al_tee_trail_color, 255, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Tee trail color")
 MACRO_CONFIG_INT(ClTeeTrailTaper, al_tee_trail_taper, 1, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Taper tee trail over length")
-MACRO_CONFIG_INT(ClTeeTrailFade, al_tee_trail_fade, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Fade trail alpha over length")
-MACRO_CONFIG_INT(ClTeeTrailColorMode, al_tee_trail_color_mode, 1, 1, 5, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Tee trail color mode (1: Solid color, 2: Current Tee color, 3: Rainbow, 4: Color based on Tee speed, 5: Random)")
+MACRO_CONFIG_INT(ClTeeTrailFade, al_tee_trail_fade, 1, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Fade trail alpha over length")
+MACRO_CONFIG_INT(ClTeeTrailColorMode, al_tee_trail_color_mode, 2, 1, 5, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Tee trail color mode (1: Solid color, 2: Current Tee color, 3: Rainbow, 4: Color based on Tee speed, 5: Random)")
 
 // Chat Reply
 MACRO_CONFIG_INT(ClAutoReplyMuted, al_auto_reply_muted, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Auto reply to muted players with a message")
