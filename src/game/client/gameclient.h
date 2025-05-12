@@ -135,7 +135,7 @@ class CGameClient : public IGameClient
 {
 public:
 	friend class CAlesstya;
-	
+
 	// all components
 	CInfoMessages m_InfoMessages;
 	CCamera m_Camera;

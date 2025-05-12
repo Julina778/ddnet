@@ -997,15 +997,6 @@ endif()
 set(EXPECTED_DATA
   announcement.txt
   arrow.png
-  alesstya/fonts/Cabin-Regular.ttf # // Alesstya1
-  alesstya/fonts/FreeSansBold.ttf
-  alesstya/fonts/GoogleSans-Regular.ttf
-  alesstya/fonts/Inter_24pt-Regular.ttf
-  alesstya/fonts/Inter_24pt-SemiBold.ttf
-  alesstya/fonts/Montserrat-Regular.ttf
-  alesstya/fonts/Nunito-Black.ttf
-  alesstya/fonts/Rubik-Regular.ttf
-  alesstya/fonts/minecraft_font.ttf
   assets/entities/comfort/ddnet.png
   assets/entities/license.txt
   assets/game/game_06.png
