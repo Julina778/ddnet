@@ -27,6 +27,8 @@ MACRO_CONFIG_INT(ClPingNameCircle, al_nameplate_ping_circle, 0, 0, 1, CFGFLAG_CL
 
 //MACRO_CONFIG_INT(ClHammerRotatesWithCursor, al_hammer_rotates_with_cursor, 0, 0, 2, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Allow your hammer to rotate like other weapons")
 
+MACRO_CONFIG_INT(ClMiniVoteHud, al_mini_vote_hud, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "When enabled makes the vote UI small")
+
 // Anti Latency Tools
 MACRO_CONFIG_INT(ClFreezeUpdateFix, al_freeze_update_fix, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Will change your skin faster when you enter freeze. ")
 MACRO_CONFIG_INT(ClRemoveAnti, al_remove_anti, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Removes some amount of antiping & player prediction in freeze")

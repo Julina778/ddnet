@@ -17,6 +17,7 @@ public:
 	int Sizeof() const override { return sizeof(*this); }
 	void OnInit() override;
 	void OnMessage(int MsgType, void *pRawMsg) override;
+	void RenderMiniVoteHud();
 };
 
 #endif
