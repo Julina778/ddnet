@@ -2324,6 +2324,7 @@ if(CLIENT)
     components/alesstya/alesstya.h
     components/alesstya/bindwheel.cpp
     components/alesstya/bindwheel.h
+    components/alesstya/menus_alesstya.cpp
     components/alesstya/outlines.cpp
     components/alesstya/outlines.h
     components/alesstya/skinprofiles.cpp

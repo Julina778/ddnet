@@ -88,26 +88,26 @@ MACRO_CONFIG_COL(ClOutlineColorUnfreeze, al_outline_color_unfreeze, 0, CFGFLAG_C
 MACRO_CONFIG_COL(ClOutlineColorKill, al_outline_color_kill, 0, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Unfreeze outline color") // 0 0 0
 
 // Indicator Variables
-MACRO_CONFIG_COL(ClIndicatorAlive, al_indicator_alive, 255, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Color of alive tees in player indicator")
-MACRO_CONFIG_COL(ClIndicatorFreeze, al_indicator_freeze, 65407, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Color of frozen tees in player indicator")
-MACRO_CONFIG_COL(ClIndicatorSaved, al_indicator_dead, 0, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Color of tees who is getting saved in player indicator")
-MACRO_CONFIG_INT(ClIndicatorOffset, al_indicator_offset, 42, 16, 200, CFGFLAG_CLIENT | CFGFLAG_SAVE, "(16-128) Offset of indicator position")
-MACRO_CONFIG_INT(ClIndicatorOffsetMax, al_indicator_offset_max, 100, 16, 200, CFGFLAG_CLIENT | CFGFLAG_SAVE, "(16-128) Max indicator offset for variable offset setting")
-MACRO_CONFIG_INT(ClIndicatorVariableDistance, al_indicator_variable_distance, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Indicator circles will be further away the further the tee is")
-MACRO_CONFIG_INT(ClIndicatorMaxDistance, al_indicator_variable_max_distance, 1000, 500, 7000, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Maximum tee distance for variable offset")
-MACRO_CONFIG_INT(ClIndicatorRadius, al_indicator_radius, 4, 1, 16, CFGFLAG_CLIENT | CFGFLAG_SAVE, "(1-16) indicator circle size")
-MACRO_CONFIG_INT(ClIndicatorOpacity, al_indicator_opacity, 50, 0, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Opacity of indicator circles")
-MACRO_CONFIG_INT(ClPlayerIndicator, al_player_indicator, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Show radial indicator of other tees")
-MACRO_CONFIG_INT(ClPlayerIndicatorFreeze, al_player_indicator_freeze, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Only show frozen tees in indicator")
-MACRO_CONFIG_INT(ClIndicatorTeamOnly, al_indicator_inteam, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Only show indicator while in team")
-MACRO_CONFIG_INT(ClIndicatorTees, al_indicator_tees, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Show tees instead of circles")
-MACRO_CONFIG_INT(ClIndicatorHideVisible, al_indicator_hide_visible_tees, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Don't show tees that are on your screen")
+//MACRO_CONFIG_COL(ClIndicatorAlive, al_indicator_alive, 255, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Color of alive tees in player indicator")
+//MACRO_CONFIG_COL(ClIndicatorFreeze, al_indicator_freeze, 65407, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Color of frozen tees in player indicator")
+//MACRO_CONFIG_COL(ClIndicatorSaved, al_indicator_dead, 0, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Color of tees who is getting saved in player indicator")
+//MACRO_CONFIG_INT(ClIndicatorOffset, al_indicator_offset, 42, 16, 200, CFGFLAG_CLIENT | CFGFLAG_SAVE, "(16-128) Offset of indicator position")
+//MACRO_CONFIG_INT(ClIndicatorOffsetMax, al_indicator_offset_max, 100, 16, 200, CFGFLAG_CLIENT | CFGFLAG_SAVE, "(16-128) Max indicator offset for variable offset setting")
+//MACRO_CONFIG_INT(ClIndicatorVariableDistance, al_indicator_variable_distance, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Indicator circles will be further away the further the tee is")
+//MACRO_CONFIG_INT(ClIndicatorMaxDistance, al_indicator_variable_max_distance, 1000, 500, 7000, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Maximum tee distance for variable offset")
+//MACRO_CONFIG_INT(ClIndicatorRadius, al_indicator_radius, 4, 1, 16, CFGFLAG_CLIENT | CFGFLAG_SAVE, "(1-16) indicator circle size")
+//MACRO_CONFIG_INT(ClIndicatorOpacity, al_indicator_opacity, 50, 0, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Opacity of indicator circles")
+//MACRO_CONFIG_INT(ClPlayerIndicator, al_player_indicator, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Show radial indicator of other tees")
+//MACRO_CONFIG_INT(ClPlayerIndicatorFreeze, al_player_indicator_freeze, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Only show frozen tees in indicator")
+//MACRO_CONFIG_INT(ClIndicatorTeamOnly, al_indicator_inteam, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Only show indicator while in team")
+//MACRO_CONFIG_INT(ClIndicatorTees, al_indicator_tees, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Show tees instead of circles")
+//MACRO_CONFIG_INT(ClIndicatorHideVisible, al_indicator_hide_visible_tees, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Don't show tees that are on your screen")
 
 // Bind Wheel
 MACRO_CONFIG_INT(ClResetBindWheelMouse, al_reset_bindwheel_mouse, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Reset position of mouse when opening bindwheel")
 
 // Regex chat matching
-MACRO_CONFIG_STR(ClRegexChatIgnore, al_regex_chat_ignore, 512, "", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Filters out chat messages based on a regular expression.")
+//MACRO_CONFIG_STR(ClRegexChatIgnore, al_regex_chat_ignore, 512, "", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Filters out chat messages based on a regular expression.")
 
 // Misc visual
 //MACRO_CONFIG_INT(ClWhiteFeet, al_white_feet, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Render all feet as perfectly white base color")
@@ -118,9 +118,9 @@ MACRO_CONFIG_STR(ClRegexChatIgnore, al_regex_chat_ignore, 512, "", CFGFLAG_CLIEN
 MACRO_CONFIG_INT(ClNotifyWhenLast, al_last_notify, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Notify when you are last")
 MACRO_CONFIG_STR(ClNotifyWhenLastText, al_last_notify_text, 64, "Last!", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Text for last notify")
 MACRO_CONFIG_COL(ClNotifyWhenLastColor, al_last_notify_color, 256, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Color for last notify")
-MACRO_CONFIG_INT(ClNotifyWhenLastXpos, al_last_notify_xpos, 100, 0, 500, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Left Right")
-MACRO_CONFIG_INT(ClNotifyWhenLastYpos, al_last_notify_ypos, 16, 0, 300, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Up Down")
-MACRO_CONFIG_INT(ClNotifyWhenLastSize, al_last_notify_size, 15, 0, 50, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Font Size")
+MACRO_CONFIG_INT(ClNotifyWhenLastXpos, al_last_notify_xpos, 20, 0, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Horizontal position for last notify")
+MACRO_CONFIG_INT(ClNotifyWhenLastYpos, al_last_notify_ypos, 10, 0, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Vertical position for last notify")
+MACRO_CONFIG_INT(ClNotifyWhenLastSize, al_last_notify_size, 15, 0, 50, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Font size for last notify")
 
 //MACRO_CONFIG_INT(ClRenderCursorSpec, al_cursor_in_spec, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Render your gun cursor when spectating in freeview")
 //MACRO_CONFIG_INT(ClRenderCursorSpecAlpha, al_cursor_in_spec_alpha, 100, 0, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Alpha of cursor in freeview")
@@ -191,15 +191,15 @@ MACRO_CONFIG_INT(ClTeeTrailFade, al_tee_trail_fade, 1, 0, 1, CFGFLAG_CLIENT | CF
 MACRO_CONFIG_INT(ClTeeTrailColorMode, al_tee_trail_color_mode, 2, 1, 5, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Tee trail color mode (1: Solid color, 2: Current Tee color, 3: Rainbow, 4: Color based on Tee speed, 5: Random)")
 
 // Chat Reply
-MACRO_CONFIG_INT(ClAutoReplyMuted, al_auto_reply_muted, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Auto reply to muted players with a message")
-MACRO_CONFIG_STR(ClAutoReplyMutedMessage, al_auto_reply_muted_message, 128, "I have muted you", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Message to reply to muted players")
+//MACRO_CONFIG_INT(ClAutoReplyMuted, al_auto_reply_muted, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Auto reply to muted players with a message")
+//MACRO_CONFIG_STR(ClAutoReplyMutedMessage, al_auto_reply_muted_message, 128, "I have muted you", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Message to reply to muted players")
 MACRO_CONFIG_INT(ClAutoReplyMinimized, al_auto_reply_minimized, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Auto reply when your game is minimized")
 MACRO_CONFIG_STR(ClAutoReplyMinimizedMessage, al_auto_reply_minimized_message, 128, "I am not tabbed in", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Message to reply when your game is minimized")
 
 // Voting
-MACRO_CONFIG_INT(ClAutoVoteWhenFar, al_auto_vote_when_far, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Auto vote no if you far on a map")
-MACRO_CONFIG_STR(ClAutoVoteWhenFarMessage, al_auto_vote_when_far_message, 128, "", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Message to send when auto far vote happens, leave empty to disable")
-MACRO_CONFIG_INT(ClAutoVoteWhenFarTime, al_auto_vote_when_far_time, 5, 0, 20, CFGFLAG_CLIENT | CFGFLAG_SAVE, "How long until auto vote far happens")
+//MACRO_CONFIG_INT(ClAutoVoteWhenFar, al_auto_vote_when_far, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Auto vote no if you far on a map")
+//MACRO_CONFIG_STR(ClAutoVoteWhenFarMessage, al_auto_vote_when_far_message, 128, "", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Message to send when auto far vote happens, leave empty to disable")
+//MACRO_CONFIG_INT(ClAutoVoteWhenFarTime, al_auto_vote_when_far_time, 5, 0, 20, CFGFLAG_CLIENT | CFGFLAG_SAVE, "How long until auto vote far happens")
 
 // Integration
 //MACRO_CONFIG_INT(ClDiscordRPC, al_discord_rpc, 1, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Toggle discord RPC (requires restart)")
@@ -208,19 +208,19 @@ MACRO_CONFIG_INT(ClAutoVoteWhenFarTime, al_auto_vote_when_far_time, 5, 0, 20, CF
 MACRO_CONFIG_STR(ClCustomFont, al_custom_font, 255, "DejaVu Sans", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Custom font face")
 
 // Bg Draw
-MACRO_CONFIG_INT(ClBgDrawWidth, al_bg_draw_width, 5, 1, 50, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Width of background draw strokes")
-MACRO_CONFIG_INT(ClBgDrawFadeTime, al_bg_draw_fade_time, 120, 0, 600, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Time until strokes dissapear (0 = never)")
-MACRO_CONFIG_INT(ClBgDrawMaxItems, al_bg_draw_max_items, 128, 0, 2048, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Maximum number of strokes")
-MACRO_CONFIG_COL(ClBgDrawColor, al_bg_draw_color, 14024576, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Color of background draw strokes")
+//MACRO_CONFIG_INT(ClBgDrawWidth, al_bg_draw_width, 5, 1, 50, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Width of background draw strokes")
+//MACRO_CONFIG_INT(ClBgDrawFadeTime, al_bg_draw_fade_time, 120, 0, 600, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Time until strokes dissapear (0 = never)")
+//MACRO_CONFIG_INT(ClBgDrawMaxItems, al_bg_draw_max_items, 128, 0, 2048, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Maximum number of strokes")
+//MACRO_CONFIG_COL(ClBgDrawColor, al_bg_draw_color, 14024576, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Color of background draw strokes")
 
 // Translate
-MACRO_CONFIG_STR(ClTranslateBackend, al_translate_backend, 32, "ftapi", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Translate backends (ftapi, libretranslate)")
-MACRO_CONFIG_STR(ClTranslateTarget, al_translate_target, 16, "en", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Translate target language (must be 2 character ISO 639 code)")
-MACRO_CONFIG_STR(ClTranslateEndpoint, al_translate_endpoint, 256, "", CFGFLAG_CLIENT | CFGFLAG_SAVE, "For backends which need it, endpoint to use (must be https)")
-MACRO_CONFIG_STR(ClTranslateKey, al_translate_key, 256, "", CFGFLAG_CLIENT | CFGFLAG_SAVE, "For backends which need it, api key to use")
+//MACRO_CONFIG_STR(ClTranslateBackend, al_translate_backend, 32, "ftapi", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Translate backends (ftapi, libretranslate)")
+//MACRO_CONFIG_STR(ClTranslateTarget, al_translate_target, 16, "en", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Translate target language (must be 2 character ISO 639 code)")
+//MACRO_CONFIG_STR(ClTranslateEndpoint, al_translate_endpoint, 256, "", CFGFLAG_CLIENT | CFGFLAG_SAVE, "For backends which need it, endpoint to use (must be https)")
+//MACRO_CONFIG_STR(ClTranslateKey, al_translate_key, 256, "", CFGFLAG_CLIENT | CFGFLAG_SAVE, "For backends which need it, api key to use")
 
 // Animations
-MACRO_CONFIG_INT(ClAnimateWheelTime, al_animate_wheel_time, 200, 0, 1000, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Duration of emote and bind wheel animations, in milliseconds (0 == no animation, 1000 = 1 second)")
+//MACRO_CONFIG_INT(ClAnimateWheelTime, al_animate_wheel_time, 200, 0, 1000, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Duration of emote and bind wheel animations, in milliseconds (0 == no animation, 1000 = 1 second)")
 
 // Pets
 //MACRO_CONFIG_INT(ClPetShow, al_pet_show, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Show a pet")
