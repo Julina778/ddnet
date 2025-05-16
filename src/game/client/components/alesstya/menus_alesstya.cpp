@@ -59,7 +59,6 @@ const float EditBoxFontSize = 12.0f;
 const float LineSize = 20.0f;
 const float ColorPickerLineSize = 25.0f;
 const float HeadlineFontSize = 20.0f;
-const float StandardFontSize = 14.0f;
 
 const float HeadlineHeight = HeadlineFontSize + 0.0f;
 const float Margin = 10.0f;
@@ -165,7 +164,7 @@ void CMenus::RenderSettingsAlesstya(CUIRect MainView)
 
 	static int s_CurCustomTab = 0;
 
-	CUIRect TabBar, Column, LeftView, RightView, Button, Label;
+	CUIRect TabBar, LeftView, RightView, Button, Label;
 
 	MainView.HSplitTop(LineSize * 1.2f, &TabBar, &MainView);
 	const float TabWidth = TabBar.w / NUMBER_OF_ALESSTYA_TABS;
@@ -818,7 +817,7 @@ void CMenus::RenderSettingsInfo(CUIRect MainView)
 	LeftView.HSplitTop(LineSize * 2.0f, &Button, &LeftView);
 	Button.VSplitMid(&TClientConfig, &ProfilesFile, MarginSmall);
 
-	static CButtonContainer s_Config, s_Profiles, s_Warlist, s_Chatbinds;
+	static CButtonContainer s_Config, s_Profiles;
 	if(DoButtonLineSize_Menu(&s_Config, Localize("Alesstya Settings"), 0, &TClientConfig, LineSize, false, 0, IGraphics::CORNER_ALL, 5.0f, 0.0f, ColorRGBA(0.0f, 0.0f, 0.0f, 0.25f)))
 	{
 		Storage()->GetCompletePath(IStorage::TYPE_SAVE, s_aConfigDomains[ConfigDomain::TCLIENT].m_aConfigPath, aBuf, sizeof(aBuf));

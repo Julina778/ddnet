@@ -6,6 +6,7 @@
 #include <engine/shared/config.h>
 #include <engine/shared/protocol.h>
 #include <game/client/animstate.h>
+#include <game/client/components/chat.h>
 #include <game/client/gameclient.h>
 #include <game/client/render.h>
 #include <game/client/ui.h>
