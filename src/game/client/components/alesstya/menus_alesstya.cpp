@@ -626,6 +626,7 @@ void CMenus::RenderSettingsAlesstyaSettngs(CUIRect MainView)
 	Ui()->DoLabel(&Label, Localize("HUD"), HeadlineFontSize, TEXTALIGN_ML);
 	Column.HSplitTop(MarginSmall, nullptr, &Column);
 
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClMiniVoteHud, Localize("Makes the vote UI smaller"), &g_Config.m_ClMiniVoteHud, &Column, LineSize);
 	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClNotifyWhenLast, Localize("Show when you are the last alive"), &g_Config.m_ClNotifyWhenLast, &Column, LineSize);
 	CUIRect NotificationConfig;
 	Column.HSplitTop(LineSize + MarginSmall, &NotificationConfig, &Column);
@@ -639,15 +640,15 @@ void CMenus::RenderSettingsAlesstyaSettngs(CUIRect MainView)
 		static CButtonContainer s_ClientNotifyWhenLastColor;
 		DoLine_ColorPicker(&s_ClientNotifyWhenLastColor, ColorPickerLineSize, ColorPickerLabelSize, ColorPickerLineSpacing, &NotificationConfig, "", &g_Config.m_ClNotifyWhenLastColor, ColorRGBA(1.0f, 1.0f, 1.0f), false);
 		Column.HSplitTop(LineSize, &Button, &Column);
-		Ui()->DoScrollbarOption(&g_Config.m_ClNotifyWhenLastXpos, &g_Config.m_ClNotifyWhenLastXpos, &Button, Localize("Horizontal Position"), 1, 100);
+		Ui()->DoScrollbarOption(&g_Config.m_ClNotifyWhenLastX, &g_Config.m_ClNotifyWhenLastX, &Button, Localize("Horizontal Position"), 1, 100, &CUi::ms_LinearScrollbarScale, 0, "%");
 		Column.HSplitTop(LineSize, &Button, &Column);
-		Ui()->DoScrollbarOption(&g_Config.m_ClNotifyWhenLastYpos, &g_Config.m_ClNotifyWhenLastYpos, &Button, Localize("Vertical Position"), 1, 100);
+		Ui()->DoScrollbarOption(&g_Config.m_ClNotifyWhenLastY, &g_Config.m_ClNotifyWhenLastY, &Button, Localize("Vertical Position"), 1, 100, &CUi::ms_LinearScrollbarScale, 0, "%");
 		Column.HSplitTop(LineSize, &Button, &Column);
 		Ui()->DoScrollbarOption(&g_Config.m_ClNotifyWhenLastSize, &g_Config.m_ClNotifyWhenLastSize, &Button, Localize("Font Size"), 1, 50);
 	}
 	else
 	{
-		Column.HSplitTop(LineSize * 3, nullptr, &Column);
+		Column.HSplitTop(LineSize * 3.0f, nullptr, &Column);
 	}
 	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
 	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;

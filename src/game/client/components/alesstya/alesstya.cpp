@@ -172,6 +172,7 @@ void CAlesstya::RenderMiniVoteHud()
 
 	SLabelProperties Props;
 	Props.m_EllipsisAtEnd = true;
+	Props.m_MaxWidth = View.w;
 
 	CUIRect Row, LeftColumn, RightColumn, ProgressSpinner;
 	char aBuf[256];

@@ -118,8 +118,8 @@ MACRO_CONFIG_INT(ClResetBindWheelMouse, al_reset_bindwheel_mouse, 0, 0, 1, CFGFL
 MACRO_CONFIG_INT(ClNotifyWhenLast, al_last_notify, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Notify when you are last")
 MACRO_CONFIG_STR(ClNotifyWhenLastText, al_last_notify_text, 64, "Last!", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Text for last notify")
 MACRO_CONFIG_COL(ClNotifyWhenLastColor, al_last_notify_color, 256, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Color for last notify")
-MACRO_CONFIG_INT(ClNotifyWhenLastXpos, al_last_notify_xpos, 20, 0, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Horizontal position for last notify")
-MACRO_CONFIG_INT(ClNotifyWhenLastYpos, al_last_notify_ypos, 10, 0, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Vertical position for last notify")
+MACRO_CONFIG_INT(ClNotifyWhenLastX, al_last_notify_x, 20, 0, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Horizontal position for last notify as percentage of screen width")
+MACRO_CONFIG_INT(ClNotifyWhenLastY, al_last_notify_y, 10, 0, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Vertical position for last notify as percentage of screen height")
 MACRO_CONFIG_INT(ClNotifyWhenLastSize, al_last_notify_size, 15, 0, 50, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Font size for last notify")
 
 //MACRO_CONFIG_INT(ClRenderCursorSpec, al_cursor_in_spec, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Render your gun cursor when spectating in freeview")
