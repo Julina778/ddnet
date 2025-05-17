@@ -165,15 +165,21 @@ void CBindWheel::OnRender()
 		m_SelectorMouse = normalize(m_SelectorMouse) * 170.0f;
 
 	int SegmentCount = m_vBinds.size();
-	float SegmentAngle = 2.0f * pi / SegmentCount;
-
-	float SelectedAngle = angle(m_SelectorMouse) + SegmentAngle / 2.0f;
-	if(SelectedAngle < 0.0f)
-		SelectedAngle += 2.0f * pi;
-	if(length(m_SelectorMouse) > 110.0f)
-		m_SelectedBind = (int)(SelectedAngle / (2.0f * pi) * SegmentCount);
-	else
+	if(SegmentCount == 0)
+	{
 		m_SelectedBind = -1;
+	}
+	else
+	{
+		float SegmentAngle = 2.0f * pi / SegmentCount;
+		float SelectedAngle = angle(m_SelectorMouse) + SegmentAngle / 2.0f;
+		if(SelectedAngle < 0.0f)
+			SelectedAngle += 2.0f * pi;
+		if(length(m_SelectorMouse) > 110.0f)
+			m_SelectedBind = (int)(SelectedAngle / (2.0f * pi) * SegmentCount);
+		else
+			m_SelectedBind = -1;
+	}
 
 	CUIRect Screen = *Ui()->Screen();
 
@@ -238,6 +244,6 @@ void CBindWheel::ConfigSaveCallback(IConfigManager *pConfigManager, void *pUserD
 		pDst = aBuf + str_length(aBuf);
 		str_escape(&pDst, Bind.m_aCommand, pEnd);
 		str_append(aBuf, "\"");
-		pConfigManager->WriteLine(aBuf);
+		pConfigManager->WriteLine(aBuf, ConfigDomain::TCLIENT);
 	}
 }
