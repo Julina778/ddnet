@@ -653,6 +653,49 @@ void CMenus::RenderSettingsAlesstyaSettngs(CUIRect MainView)
 	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
 	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
 
+	// ***** Grenade & Laser Prediction ***** //
+	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
+	s_SectionBoxes.push_back(Column);
+	Column.HSplitTop(HeadlineHeight, &Label, &Column);
+	Ui()->DoLabel(&Label, Localize("Grenade & Laser Prediction"), HeadlineFontSize, TEXTALIGN_ML);
+	Column.HSplitTop(MarginSmall, nullptr, &Column);
+
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClGrenadePath, Localize("Grenade path prediction"), &g_Config.m_ClGrenadePath, &Column, LineSize);
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClLaserPath, Localize("Laser path prediction"), &g_Config.m_ClLaserPath, &Column, LineSize);
+	
+	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
+	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
+
+	// ***** Tee Stats ***** //
+	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
+	s_SectionBoxes.push_back(Column);
+	Column.HSplitTop(HeadlineHeight, &Label, &Column);
+	Ui()->DoLabel(&Label, Localize("Tee Stats"), HeadlineFontSize, TEXTALIGN_ML);
+	Column.HSplitTop(MarginSmall, nullptr, &Column);
+
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClShowFlags, Localize("Show Tee Stats (Deep/Jetpack/etc)"), &g_Config.m_ClShowFlags, &Column, LineSize);
+	if(g_Config.m_ClShowFlags)
+	{
+		Column.HSplitTop(LineSize, &Button, &Column);
+		Ui()->DoScrollbarOption(&g_Config.m_ClShowFlagsSize, &g_Config.m_ClShowFlagsSize, &Button, Localize("Size of tee stat"), -50, 100);
+	}
+	else
+		Column.HSplitTop(LineSize, nullptr, &Column);
+
+	Column.HSplitTop(MarginExtraSmall * 3.0f, nullptr, &Column);
+
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClShowDJ, Localize("Show double jumps of a tee"), &g_Config.m_ClShowDJ, &Column, LineSize);
+	if(g_Config.m_ClShowDJ)
+	{
+		Column.HSplitTop(LineSize, &Button, &Column);
+		Ui()->DoScrollbarOption(&g_Config.m_ClShowJumpsSize, &g_Config.m_ClShowJumpsSize, &Button, Localize("Size of double jump"), -50, 100);
+	}
+	else
+		Column.HSplitTop(LineSize, nullptr, &Column);
+
+	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
+	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
+
 	// ***** Tile Outlines ***** //
 	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
 	s_SectionBoxes.push_back(Column);

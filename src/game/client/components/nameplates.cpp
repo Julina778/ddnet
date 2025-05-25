@@ -14,8 +14,10 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #define popcount64 _mm_popcnt_u64
-#else
+#elif defined(__GNUC__) || defined(__clang__)
 #define popcount64 __builtin_popcountll
+#else
+#error "Unsupported compiler"
 #endif
 
 #include "nameplates.h"
@@ -456,7 +458,7 @@ private:
 protected:
 	void Update(CGameClient &This, const CNamePlateData &Data) override
 	{
-		int ActiveFlagsCount = _mm_popcnt_u64(Data.m_TrackedFlags);
+		int ActiveFlagsCount = popcount64(Data.m_TrackedFlags);
 
 		if(!Data.m_ShowFlags || ActiveFlagsCount == 0)
 		{
