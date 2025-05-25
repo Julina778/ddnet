@@ -449,7 +449,7 @@ private:
 protected:
 	void Update(CGameClient &This, const CNamePlateData &Data) override
 	{
-		int ActiveFlagsCount = __popcnt(Data.m_TrackedFlags);
+		int ActiveFlagsCount = __builtin_popcount(Data.m_TrackedFlags);
 
 		if(!Data.m_ShowFlags || ActiveFlagsCount == 0)
 		{
