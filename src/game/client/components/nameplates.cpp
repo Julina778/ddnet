@@ -11,6 +11,15 @@
 #include <memory>
 #include <vector>
 
+#ifdef _MSC_VER
+    #include <intrin.h>
+    #define popcount64 _mm_popcnt_u64 // MSVC 使用 _mm_popcnt_u64()
+#elif defined(__GNUC__) || defined(__clang__)
+    #define popcount64 __builtin_popcountll // GCC 和 Clang 使用 __builtin_popcountll()
+#else
+    #error "Unsupported compiler"
+#endif
+
 #include "nameplates.h"
 
 static constexpr float DEFAULT_PADDING = 5.0f;
@@ -449,7 +458,7 @@ private:
 protected:
 	void Update(CGameClient &This, const CNamePlateData &Data) override
 	{
-		int ActiveFlagsCount = __builtin_popcount(Data.m_TrackedFlags);
+		int ActiveFlagsCount = popcount64(Data.m_TrackedFlags);
 
 		if(!Data.m_ShowFlags || ActiveFlagsCount == 0)
 		{
