@@ -12,12 +12,12 @@
 #include <vector>
 
 #ifdef _MSC_VER
-#    include <intrin.h>
-#    define popcount64 _mm_popcnt_u64
+#include <intrin.h>
+#define popcount64 _mm_popcnt_u64
 #elif defined(__GNUC__) || defined(__clang__)
-#    define popcount64 __builtin_popcountll
+#define popcount64 __builtin_popcountll
 #else
-#    error "Unsupported compiler"
+#error "Unsupported compiler"
 #endif
 
 #include "nameplates.h"
