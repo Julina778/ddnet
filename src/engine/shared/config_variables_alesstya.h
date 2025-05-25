@@ -207,6 +207,14 @@ MACRO_CONFIG_STR(ClAutoReplyMinimizedMessage, al_auto_reply_minimized_message, 1
 // Font
 MACRO_CONFIG_STR(ClCustomFont, al_custom_font, 255, "DejaVu Sans", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Custom font face")
 
+// Show Flag and jump
+MACRO_CONFIG_INT(ClShowFlags, al_show_flags, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Tee stats (Deep/Jetpack/etc)")
+MACRO_CONFIG_INT(ClShowFlagsSize, al_show_flags_size, 30, -50, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Size of tee stat indicators")
+MACRO_CONFIG_INT(ClGrenadePath, al_grenade_path, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Grenade path prediction")
+MACRO_CONFIG_INT(ClLaserPath, al_laser_path, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Laser path prediction")
+MACRO_CONFIG_INT(ClShowDJ, al_show_jumps, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Show remaining double jumps of a tee")
+MACRO_CONFIG_INT(ClShowJumpsSize, al_show_jumps_size, 30, -50, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Size of double jump indicators")
+
 // Bg Draw
 //MACRO_CONFIG_INT(ClBgDrawWidth, al_bg_draw_width, 5, 1, 50, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Width of background draw strokes")
 //MACRO_CONFIG_INT(ClBgDrawFadeTime, al_bg_draw_fade_time, 120, 0, 600, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Time until strokes dissapear (0 = never)")
