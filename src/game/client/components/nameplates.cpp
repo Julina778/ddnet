@@ -11,6 +11,13 @@
 #include <memory>
 #include <vector>
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#define popcount64 _mm_popcnt_u64
+#else
+#define popcount64 __builtin_popcountll
+#endif
+
 #include "nameplates.h"
 
 static constexpr float DEFAULT_PADDING = 5.0f;
@@ -449,7 +456,7 @@ private:
 protected:
 	void Update(CGameClient &This, const CNamePlateData &Data) override
 	{
-		int ActiveFlagsCount = __popcnt(Data.m_TrackedFlags);
+		int ActiveFlagsCount = _mm_popcnt_u64(Data.m_TrackedFlags);
 
 		if(!Data.m_ShowFlags || ActiveFlagsCount == 0)
 		{
@@ -929,10 +936,27 @@ void CNamePlates::RenderNamePlateGame(vec2 Position, const CNetObj_PlayerInfo *p
 	Data.m_JumpsUsed = 0;
 	Data.m_JumpsLeft = 0;
 
-	if(Data.m_ShowHookStrongWeak || Data.m_ShowJumps || Data.m_ShowFlags)
+	const bool Following = (GameClient()->m_Snap.m_SpecInfo.m_Active && !GameClient()->m_MultiViewActivated && GameClient()->m_Snap.m_SpecInfo.m_SpectatorId != SPEC_FREEVIEW);
+	const CGameClient::CSnapState::CCharacterInfo &Other = GameClient()->m_Snap.m_aCharacters[pPlayerInfo->m_ClientId];
+	if(GameClient()->m_Snap.m_LocalClientId != -1 || Following)
 	{
-		const bool Following = (GameClient()->m_Snap.m_SpecInfo.m_Active && !GameClient()->m_MultiViewActivated && GameClient()->m_Snap.m_SpecInfo.m_SpectatorId != SPEC_FREEVIEW);
-		const CGameClient::CSnapState::CCharacterInfo &Other = GameClient()->m_Snap.m_aCharacters[pPlayerInfo->m_ClientId];
+		const int SelectedId = Following ? GameClient()->m_Snap.m_SpecInfo.m_SpectatorId : GameClient()->m_Snap.m_LocalClientId;
+		const CGameClient::CSnapState::CCharacterInfo &Selected = GameClient()->m_Snap.m_aCharacters[SelectedId];
+		if(Selected.m_HasExtendedData && Other.m_HasExtendedData)
+		{
+			Data.m_HookStrongWeakId = Other.m_ExtendedData.m_StrongWeakId;
+			Data.m_ShowHookStrongWeakId = g_Config.m_Debug || g_Config.m_ClNamePlatesStrong == 2;
+			if(SelectedId == pPlayerInfo->m_ClientId)
+				Data.m_ShowHookStrongWeak = Data.m_ShowHookStrongWeakId;
+			else
+			{
+				Data.m_HookStrongWeakState = Selected.m_ExtendedData.m_StrongWeakId > Other.m_ExtendedData.m_StrongWeakId ? EHookStrongWeakState::STRONG : EHookStrongWeakState::WEAK;
+				Data.m_ShowHookStrongWeak = g_Config.m_Debug || g_Config.m_ClNamePlatesStrong > 0;
+			}
+		}
+	}
+	if(Data.m_ShowJumps || Data.m_ShowFlags)
+	{
 		if(Data.m_ShowFlags && Other.m_HasExtendedData)
 		{
 			Data.m_TrackedFlags = Other.m_ExtendedData.m_Flags &
