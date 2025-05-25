@@ -344,7 +344,7 @@ void CPlayers::RenderHookCollLine(
 
 			if(g_Config.m_ClGrenadePath && Player.m_Weapon == WEAPON_GRENADE)
 			{
-				vec2 ExDirection = Direction;
+				ExDirection = Direction;
 
 				if(Local && !m_pClient->m_Snap.m_SpecInfo.m_Active && Client()->State() != IClient::STATE_DEMOPLAYBACK)
 				{
