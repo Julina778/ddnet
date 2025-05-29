@@ -662,7 +662,7 @@ void CMenus::RenderSettingsAlesstyaSettngs(CUIRect MainView)
 
 	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClGrenadePath, Localize("Grenade path prediction"), &g_Config.m_ClGrenadePath, &Column, LineSize);
 	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClLaserPath, Localize("Laser path prediction"), &g_Config.m_ClLaserPath, &Column, LineSize);
-	
+
 	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
 	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
 
@@ -670,7 +670,7 @@ void CMenus::RenderSettingsAlesstyaSettngs(CUIRect MainView)
 	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
 	s_SectionBoxes.push_back(Column);
 	Column.HSplitTop(HeadlineHeight, &Label, &Column);
-	Ui()->DoLabel(&Label, Localize("Tee Stats"), HeadlineFontSize, TEXTALIGN_ML);
+	Ui()->DoLabel(&Label, Localize("Show Tee Stats"), HeadlineFontSize, TEXTALIGN_ML);
 	Column.HSplitTop(MarginSmall, nullptr, &Column);
 
 	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClShowFlags, Localize("Show Tee Stats (Deep/Jetpack/etc)"), &g_Config.m_ClShowFlags, &Column, LineSize);
