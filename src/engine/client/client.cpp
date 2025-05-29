@@ -346,6 +346,8 @@ void CClient::SendInput()
 			m_aInputs[i][m_aCurrentInput[i]].m_Tick = m_aPredTick[g_Config.m_ClDummy];
 			m_aInputs[i][m_aCurrentInput[i]].m_PredictedTime = m_PredictedTime.Get(Now);
 			m_aInputs[i][m_aCurrentInput[i]].m_PredictionMargin = PredictionMargin() * time_freq() / 1000;
+			if(g_Config.m_ClSmoothPredictionMargin) // Alesstya1
+				m_aInputs[i][m_aCurrentInput[i]].m_PredictionMargin = m_PredictedTime.GetMargin(Now); // Alesstya2
 			m_aInputs[i][m_aCurrentInput[i]].m_Time = Now;
 
 			// pack it
@@ -1897,7 +1899,10 @@ void CClient::ProcessServerPacket(CNetChunk *pPacket, int Conn, bool Dummy)
 				if(m_aInputs[Conn][k].m_Tick == InputPredTick)
 				{
 					Target = m_aInputs[Conn][k].m_PredictedTime + (Now - m_aInputs[Conn][k].m_Time);
-					Target = Target - (int64_t)((TimeLeft / 1000.0f) * time_freq());
+					if(g_Config.m_ClSmoothPredictionMargin) // Alesstya1
+						Target = Target - (int64_t)((TimeLeft / 1000.0f) * time_freq()) + m_aInputs[Conn][k].m_PredictionMargin;
+					else
+						Target = Target - (int64_t)((TimeLeft / 1000.0f) * time_freq()); // Alesstya2
 					break;
 				}
 			}
@@ -2789,6 +2794,10 @@ void CClient::Update()
 					// send input
 					SendInput();
 				}
+				if(g_Config.m_ClFastInput && GameClient()->CheckNewInput()) // Alesstya1
+				{
+					Repredict = true;
+				} // Alesstya2
 			}
 
 			// only do sane predictions
@@ -3364,9 +3373,7 @@ void CClient::Run()
 
 	if(!m_pConfigManager->Save())
 	{
-		char aError[128];
-		str_format(aError, sizeof(aError), Localize("Saving settings to '%s' failed"), CONFIG_FILE);
-		m_vQuittingWarnings.emplace_back(Localize("Error saving settings"), aError);
+		m_vQuittingWarnings.emplace_back(Localize("Error saving settings"));
 	}
 
 	m_Fifo.Shutdown();
@@ -4803,19 +4810,22 @@ int main(int argc, const char **argv)
 	pClient->InitInterfaces();
 
 	// execute config file
-	if(pStorage->FileExists(CONFIG_FILE, IStorage::TYPE_ALL))
+	pConsole->SetUnknownCommandCallback(SaveUnknownCommandCallback, pClient); // Alesstya1
+	for(ConfigDomain ConfigDomain = ConfigDomain::START; ConfigDomain < ConfigDomain::NUM; ++ConfigDomain)
 	{
-		pConsole->SetUnknownCommandCallback(SaveUnknownCommandCallback, pClient);
-		if(!pConsole->ExecuteFile(CONFIG_FILE))
+		if(!pStorage->FileExists(s_aConfigDomains[ConfigDomain].m_aConfigPath, IStorage::TYPE_ALL))
+			continue;
+		if(!pConsole->ExecuteFile(s_aConfigDomains[ConfigDomain].m_aConfigPath))
 		{
-			const char *pError = "Failed to load config from '" CONFIG_FILE "'.";
-			log_error("client", "%s", pError);
-			pClient->ShowMessageBox("Config File Error", pError);
+			char aError[2048];
+			snprintf(aError, sizeof(aError), "Failed to load config from '%s'.", s_aConfigDomains[ConfigDomain].m_aConfigPath);
+			log_error("client", aError);
+			pClient->ShowMessageBox("Config File Error", aError);
 			PerformAllCleanup();
 			return -1;
 		}
-		pConsole->SetUnknownCommandCallback(IConsole::EmptyUnknownCommandCallback, nullptr);
 	}
+	pConsole->SetUnknownCommandCallback(IConsole::EmptyUnknownCommandCallback, nullptr); // Alesstya2
 
 	// execute autoexec file
 	if(pStorage->FileExists(AUTOEXEC_CLIENT_FILE, IStorage::TYPE_ALL))
@@ -5068,11 +5078,26 @@ void CClient::GetSmoothTick(int *pSmoothTick, float *pSmoothIntraTick, float Mix
 {
 	int64_t GameTime = m_aGameTime[g_Config.m_ClDummy].Get(time_get());
 	int64_t PredTime = m_PredictedTime.Get(time_get());
+	GameTime = std::min(GameTime, PredTime); // Alesstya1
 	int64_t SmoothTime = clamp(GameTime + (int64_t)(MixAmount * (PredTime - GameTime)), GameTime, PredTime);
 
 	*pSmoothTick = (int)(SmoothTime * GameTickSpeed() / time_freq()) + 1;
 	*pSmoothIntraTick = (SmoothTime - (*pSmoothTick - 1) * time_freq() / GameTickSpeed()) / (float)(time_freq() / GameTickSpeed());
 }
+
+void CClient::GetSmoothFreezeTick(int *pSmoothTick, float *pSmoothIntraTick, float MixAmount) // Alesstya1
+{
+	int64_t GameTime = m_aGameTime[g_Config.m_ClDummy].Get(time_get());
+	int64_t PredTime = m_PredictedTime.Get(time_get());
+	GameTime = std::min(GameTime, PredTime);
+
+	int64_t UpperPredTime = clamp(PredTime - (time_freq() / 50) * g_Config.m_ClUnfreezeLagTicks, GameTime, PredTime);
+	int64_t LowestPredTime = clamp(PredTime, GameTime, UpperPredTime);
+	int64_t SmoothTime = clamp(LowestPredTime + (int64_t)(MixAmount * (PredTime - LowestPredTime)), LowestPredTime, PredTime);
+
+	*pSmoothTick = (int)(SmoothTime * 50 / time_freq()) + 1;
+	*pSmoothIntraTick = (SmoothTime - (*pSmoothTick - 1) * time_freq() / 50) / (float)(time_freq() / 50);
+} // Alesstya2
 
 void CClient::AddWarning(const SWarning &Warning)
 {
@@ -5102,7 +5127,11 @@ int CClient::MaxLatencyTicks() const
 
 int CClient::PredictionMargin() const
 {
-	return m_ServerCapabilities.m_SyncWeaponInput ? g_Config.m_ClPredictionMargin : 10;
+	if(g_Config.m_ClPredMarginInFreeze && g_Config.m_ClAmIFrozen) // Alesstya1
+	{
+		return g_Config.m_ClPredMarginInFreezeAmount;
+	}
+	return g_Config.m_ClPredictionMargin; // Alesstya2
 }
 
 int CClient::UdpConnectivity(int NetType)

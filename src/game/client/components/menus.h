@@ -84,6 +84,9 @@ class CMenus : public CComponent
 	int DoButton_CheckBoxAutoVMarginAndSet(const void *pId, const char *pText, int *pValue, CUIRect *pRect, float VMargin);
 	int DoButton_CheckBox_Number(const void *pId, const char *pText, int Checked, const CUIRect *pRect);
 
+	bool DoSliderWithScaledValue(const void *pId, int *pOption, const CUIRect *pRect, const char *pStr, int Min, int Max, int Scale, const IScrollbarScale *pScale, unsigned Flags = 0u, const char *pSuffix = ""); // Alesstya1
+	bool DoEditBoxWithLabel(CLineInput *LineInput, const CUIRect *pRect, const char *pLabel, const char *pDefault, char *pBuf, size_t BufSize); // Alesstya1
+
 	bool DoLine_RadioMenu(CUIRect &View, const char *pLabel, std::vector<CButtonContainer> &vButtonContainers, const std::vector<const char *> &vLabels, const std::vector<int> &vValues, int &Value);
 
 	CUi::SColorPickerPopupContext m_ColorPickerPopupContext;
@@ -724,6 +727,8 @@ public:
 		SETTINGS_SOUND,
 		SETTINGS_DDNET,
 		SETTINGS_ASSETS,
+		SETTINGS_ALESSTYA,
+		SETTINGS_PROFILES,
 
 		SETTINGS_LENGTH,
 
@@ -851,7 +856,20 @@ private:
 	// found in menus_settings.cpp
 	void RenderSettingsDDNet(CUIRect MainView);
 	void RenderSettingsAppearance(CUIRect MainView);
+
+	void RenderSettingsAlesstya(CUIRect MainView); // Alesstya1
+	void RenderSettingsAlesstyaSettngs(CUIRect MainView);
+	void RenderSettingsProfiles(CUIRect MainView);
+	void RenderSettingsInfo(CUIRect MainView);
+
+	void RenderFontIcon(CUIRect Rect, const char *pText, float Size, int Align);
+	int DoButtonNoRect_FontIcon(CButtonContainer *pButtonContainer, const char *pText, int Checked, const CUIRect *pRect, int Corners = IGraphics::CORNER_ALL);
+
+	ColorHSLA RenderHSLColorPicker(const CUIRect *pRect, unsigned int *pColor, bool Alpha); // Alesstya2
+
 	bool RenderHslaScrollbars(CUIRect *pRect, unsigned int *pColor, bool Alpha, float DarkestLight);
+
+	int DoButtonLineSize_Menu(CButtonContainer *pButtonContainer, const char *pText, int Checked, const CUIRect *pRect, float ButtonLineSize, bool Fake = false, const char *pImageName = nullptr, int Corners = IGraphics::CORNER_ALL, float Rounding = 5.0f, float FontFactor = 0.0f, ColorRGBA Color = ColorRGBA(1.0f, 1.0f, 1.0f, 0.5f)); // Alesstya1
 
 	CServerProcess m_ServerProcess;
 };

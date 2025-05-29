@@ -167,7 +167,7 @@ void CMenus::RenderSettingsGeneral(CUIRect MainView)
 		static CButtonContainer s_SettingsButtonId;
 		if(DoButton_Menu(&s_SettingsButtonId, Localize("Settings file"), 0, &SettingsButton))
 		{
-			Storage()->GetCompletePath(IStorage::TYPE_SAVE, CONFIG_FILE, aBuf, sizeof(aBuf));
+			Storage()->GetCompletePath(IStorage::TYPE_SAVE, s_aConfigDomains[ConfigDomain::DDNET].m_aConfigPath, aBuf, sizeof(aBuf)); // Alesstya1
 			Client()->ViewFile(aBuf);
 		}
 		GameClient()->m_Tooltips.DoToolTip(&s_SettingsButtonId, &SettingsButton, Localize("Open the settings file"));
@@ -1963,7 +1963,10 @@ void CMenus::RenderSettings(CUIRect MainView)
 		Localize("Graphics"),
 		Localize("Sound"),
 		Localize("DDNet"),
-		Localize("Assets")};
+		Localize("Assets"), // Alesstya1
+		Localize("Alesstya"),
+		Localize("Profiles")}; // Alesstya2
+
 	static CButtonContainer s_aTabButtons[SETTINGS_LENGTH];
 
 	for(int i = 0; i < SETTINGS_LENGTH; i++)
@@ -2026,6 +2029,16 @@ void CMenus::RenderSettings(CUIRect MainView)
 	{
 		GameClient()->m_MenuBackground.ChangePosition(CMenuBackground::POS_SETTINGS_ASSETS);
 		RenderSettingsCustom(MainView);
+	}
+	else if(g_Config.m_UiSettingsPage == SETTINGS_ALESSTYA)
+	{
+		GameClient()->m_MenuBackground.ChangePosition(13);
+		RenderSettingsAlesstya(MainView);
+	}
+	else if(g_Config.m_UiSettingsPage == SETTINGS_PROFILES)
+	{
+		GameClient()->m_MenuBackground.ChangePosition(14);
+		RenderSettingsProfiles(MainView);
 	}
 	else
 	{

@@ -21,6 +21,14 @@ class CPlayers : public CComponent
 		const CTeeRenderInfo *pRenderInfo,
 		int ClientId,
 		float Intra = 0.f);
+
+	void RenderPlayerGhost( // Alesstya1
+		const CNetObj_Character *pPrevChar,
+		const CNetObj_Character *pPlayerChar,
+		const CTeeRenderInfo *pRenderInfo,
+		int ClientId,
+		float Intra = 0.f); // Alesstya2
+
 	void RenderHook(
 		const CNetObj_Character *pPrevChar,
 		const CNetObj_Character *pPlayerChar,
