@@ -483,7 +483,7 @@ protected:
 			const std::pair<int, IGraphics::CTextureHandle> FlagData[] = {
 				std::make_pair(CHARACTERFLAG_MOVEMENTS_DISABLED, This.m_HudSkin.m_SpriteHudLiveFrozen),
 				std::make_pair(CHARACTERFLAG_IN_FREEZE, This.m_HudSkin.m_SpriteHudDeepFrozen),
-				std::make_pair(CHARACTERFLAG_ENDLESS_HOOK, This.m_HudSkin.m_SpriteHudDeepFrozen),
+				std::make_pair(CHARACTERFLAG_ENDLESS_HOOK, This.m_HudSkin.m_SpriteHudEndlessHook),
 				std::make_pair(CHARACTERFLAG_ENDLESS_JUMP, This.m_HudSkin.m_SpriteHudEndlessJump),
 				std::make_pair(CHARACTERFLAG_JETPACK, This.m_HudSkin.m_SpriteHudJetpack),
 				std::make_pair(CHARACTERFLAG_HOOK_HIT_DISABLED, This.m_HudSkin.m_SpriteHudHookHitDisabled),
