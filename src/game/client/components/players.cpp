@@ -595,7 +595,7 @@ void CPlayers::RenderPlayer(
 	else if(g_Config.m_ClShowOthersGhosts && !Local && !Spec)
 		Alpha = g_Config.m_ClPredGhostsAlpha / 100.0f;
 
-	if(!OtherTeam && g_Config.m_ClShowOthersGhosts && !Local && g_Config.m_ClUnpredOthersInFreeze && g_Config.m_ClAmIFrozen && !Spec)
+	if(!OtherTeam && g_Config.m_ClShowOthersGhosts && !Local && g_Config.m_ClUnpredOthersInFreeze && Client()->m_IsLocalFrozen && !Spec)
 		Alpha = 1.0f;
 	if(ClientId == -2) // ghost
 		Alpha = g_Config.m_ClRaceGhostAlpha / 100.0f; // Alesstya1
@@ -1530,7 +1530,7 @@ void CPlayers::OnRender()
 			if(!g_Config.m_ClSwapGhosts)
 				RenderGhost = false;
 		}
-		if(g_Config.m_ClUnpredOthersInFreeze && g_Config.m_ClAmIFrozen && g_Config.m_ClShowOthersGhosts)
+		if(g_Config.m_ClUnpredOthersInFreeze && Client()->m_IsLocalFrozen && g_Config.m_ClShowOthersGhosts)
 		{
 			RenderGhost = false;
 		}
