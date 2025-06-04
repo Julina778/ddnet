@@ -624,6 +624,7 @@ void CGameClient::OnReset()
 	m_LastFlagCarrierBlue = -4;
 
 	std::fill(std::begin(m_aCheckInfo), std::end(m_aCheckInfo), -1);
+	std::fill(std::begin(m_aLocalStrongWeakId), std::end(m_aLocalStrongWeakId), -1);
 
 	// m_aDDNetVersionStr is initialized once in OnInit
 
@@ -1755,6 +1756,14 @@ void CGameClient::OnNewSnapshot()
 					{
 						m_Snap.m_aCharacters[Item.m_Id].m_HasExtendedDisplayInfo = true;
 					}
+
+					// Store local player's StrongWeakId for when snap data is unavailable
+					auto *it = std::find(std::begin(m_aLocalIds), std::end(m_aLocalIds), Item.m_Id);
+					if(it != std::end(m_aLocalIds))
+					{
+						int Dummy = it - std::begin(m_aLocalIds);
+						m_aLocalStrongWeakId[Dummy] = pCharacterData->m_StrongWeakId;
+					}
 					CClientData *pClient = &m_aClients[Item.m_Id];
 					// Collision
 					pClient->m_Solo = pCharacterData->m_Flags & CHARACTERFLAG_SOLO;
@@ -2249,7 +2258,7 @@ void CGameClient::OnNewSnapshot()
 					for(int j = 0; j < Amount; j++)
 					{
 						float Angle = mix(Min, Max, (j + 1) / (float)(Amount + 2));
-						m_Effects.DamageIndicator(Pos, direction(Angle));
+						m_Effects.DamageIndicator(Pos, direction(Angle), 1.0f);
 					}
 				}
 			}
