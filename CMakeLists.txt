@@ -2052,7 +2052,10 @@ set_src(ENGINE_SHARED GLOB_RECURSE src/engine/shared
   compression.h
   config.cpp
   config.h
+  config_domains.h # // Alesstya1
+  config_includes.h
   config_variables.h
+  config_variables_alesstya.h # // Alesstya2
   console.cpp
   console.h
   csv.cpp
@@ -2319,6 +2322,17 @@ if(CLIENT)
     animstate.h
     component.cpp
     component.h
+    components/alesstya/alesstya.cpp # // Alesstya1
+    components/alesstya/alesstya.h
+    components/alesstya/bindwheel.cpp
+    components/alesstya/bindwheel.h
+    components/alesstya/menus_alesstya.cpp
+    components/alesstya/outlines.cpp
+    components/alesstya/outlines.h
+    components/alesstya/skinprofiles.cpp
+    components/alesstya/skinprofiles.h
+    components/alesstya/trails.cpp
+    components/alesstya/trails.h # // Alesstya2
     components/background.cpp
     components/background.h
     components/binds.cpp

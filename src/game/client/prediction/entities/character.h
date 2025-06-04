@@ -136,6 +136,10 @@ public:
 
 	bool IsSuper() { return m_Core.m_Super; }
 
+	int m_FreezeAccumulation; // Alesstya1
+	int m_AliveAccumulation;
+	CNetObj_PlayerInput *LatestInput() { return &m_LatestInput; }; // Alesstya2
+
 private:
 	// weapon info
 	int m_aHitObjects[10];

@@ -188,8 +188,8 @@ int CControls::SnapInput(int *pData)
 	else
 		m_aInputData[g_Config.m_ClDummy].m_PlayerFlags = PLAYERFLAG_PLAYING;
 
-	if(m_pClient->m_Scoreboard.IsActive())
-		m_aInputData[g_Config.m_ClDummy].m_PlayerFlags |= PLAYERFLAG_SCOREBOARD;
+	if(m_pClient->m_Scoreboard.IsActive() || g_Config.m_ClPingNameCircle) // Alesstya1
+		m_aInputData[g_Config.m_ClDummy].m_PlayerFlags |= PLAYERFLAG_SCOREBOARD; // Alesstya2
 
 	if(Client()->ServerCapAnyPlayerFlag() && m_pClient->m_Controls.m_aShowHookColl[g_Config.m_ClDummy])
 		m_aInputData[g_Config.m_ClDummy].m_PlayerFlags |= PLAYERFLAG_AIM;
@@ -444,3 +444,39 @@ float CControls::GetMaxMouseDistance() const
 	float MaxDistance = g_Config.m_ClDyncam ? g_Config.m_ClDyncamMaxDistance : g_Config.m_ClMouseMaxDistance;
 	return minimum((FollowFactor != 0 ? CameraMaxDistance / FollowFactor + DeadZone : MaxDistance), MaxDistance);
 }
+
+bool CControls::CheckNewInput() // Alesstya1
+{
+	CNetObj_PlayerInput TestInput = m_aInputData[g_Config.m_ClDummy];
+	TestInput.m_Direction = 0;
+	if(m_aInputDirectionLeft[g_Config.m_ClDummy] && !m_aInputDirectionRight[g_Config.m_ClDummy])
+		TestInput.m_Direction = -1;
+	if(!m_aInputDirectionLeft[g_Config.m_ClDummy] && m_aInputDirectionRight[g_Config.m_ClDummy])
+		TestInput.m_Direction = 1;
+
+	bool NewInput = false;
+	if(m_FastInput.m_Direction != TestInput.m_Direction)
+		NewInput = true;
+	if(m_FastInput.m_Hook != TestInput.m_Hook)
+		NewInput = true;
+	if(m_FastInput.m_Fire != TestInput.m_Fire)
+		NewInput = true;
+	if(m_FastInput.m_Jump != TestInput.m_Jump)
+		NewInput = true;
+	if(m_FastInput.m_NextWeapon != TestInput.m_NextWeapon)
+		NewInput = true;
+	if(m_FastInput.m_PrevWeapon != TestInput.m_PrevWeapon)
+		NewInput = true;
+	if(m_FastInput.m_WantedWeapon != TestInput.m_WantedWeapon)
+		NewInput = true;
+
+	if(g_Config.m_ClSubTickAiming)
+	{
+		TestInput.m_TargetX = (int)m_aMousePos[g_Config.m_ClDummy].x;
+		TestInput.m_TargetY = (int)m_aMousePos[g_Config.m_ClDummy].y;
+	}
+
+	m_FastInput = TestInput;
+
+	return NewInput;
+} // Alesstya2

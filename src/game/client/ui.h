@@ -732,6 +732,8 @@ public:
 		float m_AlignmentHeight;
 		bool m_TransparentButtons;
 
+		bool m_SpecialFontRenderMode = false; // Alesstya1
+
 		SSelectionPopupContext();
 		void Reset();
 	};

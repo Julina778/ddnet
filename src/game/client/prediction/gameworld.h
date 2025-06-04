@@ -16,6 +16,8 @@ class CMapBugs;
 
 class CGameWorld
 {
+	friend class CPlayers; // DClient prediction
+
 public:
 	enum
 	{
@@ -98,6 +100,7 @@ public:
 	void NetObjAdd(int ObjId, int ObjType, const void *pObjData, const CNetObj_EntityEx *pDataEx);
 	void NetObjEnd();
 	void CopyWorld(CGameWorld *pFrom);
+	void CopyWorldClean(CGameWorld *pFrom); // Alesstya1
 	CEntity *FindMatch(int ObjId, int ObjType, const void *pObjData);
 	void Clear();
 

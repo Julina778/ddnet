@@ -13,6 +13,15 @@
 #include <memory>
 #include <vector>
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#define popcount64 _mm_popcnt_u64
+#elif defined(__GNUC__) || defined(__clang__)
+#define popcount64 __builtin_popcountll
+#else
+#error "Unsupported compiler"
+#endif
+
 #include "nameplates.h"
 
 static constexpr float DEFAULT_PADDING = 5.0f;
@@ -442,6 +451,213 @@ public:
 		CNamePlatePartText(This) {}
 };
 
+class CNamePlatePartFlags : public CNamePlatePart
+{
+private:
+	int m_Flags = 0;
+	ColorRGBA m_Color = ColorRGBA(1.0, 1.0, 1.0);
+
+protected:
+	void Update(CGameClient &This, const CNamePlateData &Data) override
+	{
+		int ActiveFlagsCount = popcount64(Data.m_TrackedFlags);
+
+		if(!Data.m_ShowFlags || ActiveFlagsCount == 0)
+		{
+			m_Size = vec2();
+			m_Visible = false;
+			return;
+		}
+
+		m_Size = vec2(
+			(Data.m_FontSizeFlags + m_Padding.x) * ActiveFlagsCount - m_Padding.x,
+			Data.m_FontSizeFlags);
+
+		m_Flags = Data.m_TrackedFlags;
+		m_Color.a = Data.m_Color.a;
+		m_Visible = true;
+	}
+
+	void Render(CGameClient &This, vec2 Pos) const override
+	{
+		{
+			Pos.x -= (m_Size.x - m_Size.y) * 0.5f;
+			const std::pair<int, IGraphics::CTextureHandle> FlagData[] = {
+				std::make_pair(CHARACTERFLAG_MOVEMENTS_DISABLED, This.m_HudSkin.m_SpriteHudLiveFrozen),
+				std::make_pair(CHARACTERFLAG_IN_FREEZE, This.m_HudSkin.m_SpriteHudDeepFrozen),
+				std::make_pair(CHARACTERFLAG_ENDLESS_HOOK, This.m_HudSkin.m_SpriteHudEndlessHook),
+				std::make_pair(CHARACTERFLAG_ENDLESS_JUMP, This.m_HudSkin.m_SpriteHudEndlessJump),
+				std::make_pair(CHARACTERFLAG_JETPACK, This.m_HudSkin.m_SpriteHudJetpack),
+				std::make_pair(CHARACTERFLAG_HOOK_HIT_DISABLED, This.m_HudSkin.m_SpriteHudHookHitDisabled),
+				std::make_pair(CHARACTERFLAG_HAMMER_HIT_DISABLED, This.m_HudSkin.m_SpriteHudHammerHitDisabled),
+				std::make_pair(CHARACTERFLAG_COLLISION_DISABLED, This.m_HudSkin.m_SpriteHudCollisionDisabled),
+				std::make_pair(CHARACTERFLAG_TELEGUN_GUN, This.m_HudSkin.m_SpriteHudTeleportGun),
+				std::make_pair(CHARACTERFLAG_TELEGUN_LASER, This.m_HudSkin.m_SpriteHudTeleportLaser),
+				std::make_pair(CHARACTERFLAG_TELEGUN_GRENADE, This.m_HudSkin.m_SpriteHudTeleportGrenade),
+			};
+			for(const auto &Flag : FlagData)
+			{
+				if((m_Flags & Flag.first) == 0)
+					continue;
+
+				This.Graphics()->TextureSet(Flag.second);
+				This.Graphics()->QuadsBegin();
+				This.Graphics()->SetColor(m_Color);
+
+				This.RenderTools()->DrawSprite(Pos.x, Pos.y, m_Size.y, m_Size.y);
+				This.Graphics()->QuadsEnd();
+				Pos.x += m_Size.y + m_Padding.x;
+			}
+		}
+	}
+
+public:
+	CNamePlatePartFlags(CGameClient &This) :
+		CNamePlatePart(This)
+	{
+		m_Padding = vec2();
+	}
+};
+
+class CNamePlatePartJumps : public CNamePlatePart
+{
+private:
+	int m_JumpsLeft = 0;
+	int m_JumpsUsed = 0;
+	ColorRGBA m_Color = ColorRGBA(1.0f, 1.0f, 1.0f);
+
+protected:
+	void Update(CGameClient &This, const CNamePlateData &Data) override
+	{
+		if(!Data.m_ShowJumps || (Data.m_JumpsLeft == 0 && Data.m_JumpsUsed == 0))
+		{
+			m_Size = vec2();
+			m_Visible = false;
+			return;
+		}
+
+		int TotalJumps = Data.m_JumpsLeft + Data.m_JumpsUsed;
+		m_Size = vec2(
+			(Data.m_FontSizeJumps + m_Padding.x) * TotalJumps - m_Padding.x,
+			Data.m_FontSizeJumps);
+
+		m_JumpsLeft = Data.m_JumpsLeft;
+		m_JumpsUsed = Data.m_JumpsUsed;
+		m_Color.a = Data.m_Color.a;
+		m_Visible = true;
+	}
+
+	void Render(CGameClient &This, vec2 Pos) const override
+	{
+		Pos.x -= (m_Size.x - m_Size.y) * 0.5f;
+		if(m_JumpsLeft > 0)
+		{
+			This.Graphics()->TextureSet(This.m_HudSkin.m_SpriteHudAirjump);
+			This.Graphics()->QuadsBegin();
+			This.Graphics()->SetColor(m_Color);
+			for(int i = 0; i < m_JumpsLeft; i++)
+			{
+				This.RenderTools()->DrawSprite(Pos.x, Pos.y, m_Size.y, m_Size.y);
+				Pos.x += m_Size.y + m_Padding.x;
+			}
+			This.Graphics()->QuadsEnd();
+		}
+		if(m_JumpsUsed > 0)
+		{
+			This.Graphics()->TextureSet(This.m_HudSkin.m_SpriteHudAirjumpEmpty);
+			This.Graphics()->QuadsBegin();
+			This.Graphics()->SetColor(m_Color);
+			for(int i = 0; i < m_JumpsUsed; i++)
+			{
+				This.RenderTools()->DrawSprite(Pos.x, Pos.y, m_Size.y, m_Size.y);
+				Pos.x += m_Size.y + m_Padding.x;
+			}
+			This.Graphics()->QuadsEnd();
+		}
+	}
+
+public:
+	CNamePlatePartJumps(CGameClient &This) :
+		CNamePlatePart(This)
+	{
+		m_Padding = vec2();
+	}
+};
+
+class CNamePlatePartPing : public CNamePlatePart // Alesstya1
+{
+protected:
+	float m_Radius = 7.0f;
+	ColorRGBA m_Color;
+
+public:
+	friend class CGameClient;
+	void Update(CGameClient &This, const CNamePlateData &Data) override
+	{
+		/*
+			If in a real game,
+				Don't show ping in demos
+				Show other people's pings if in scoreboard
+				Or if ping circle and name enabled
+			If in preview
+				Show ping if ping circle and name enabled
+		*/
+		m_Visible = Data.m_InGame ? (
+						    This.Client()->State() != IClient::STATE_DEMOPLAYBACK && ((Data.m_ShowName && g_Config.m_ClPingNameCircle > 0) ||
+														     (This.m_Scoreboard.IsActive() && !This.m_Snap.m_apPlayerInfos[Data.m_ClientId]->m_Local))) :
+					    (
+						    (Data.m_ShowName && g_Config.m_ClPingNameCircle > 0));
+		if(!m_Visible)
+			return;
+		int ping = Data.m_InGame ? This.m_Snap.m_apPlayerInfos[Data.m_ClientId]->m_Latency : (1 + Data.m_ClientId) * 25;
+		m_Color = color_cast<ColorRGBA>(ColorHSLA((float)(300 - clamp(ping, 0, 300)) / 1000.0f, 1.0f, 0.5f, Data.m_Color.a));
+	}
+	void Render(CGameClient &This, vec2 Pos) const override
+	{
+		This.Graphics()->TextureClear();
+		This.Graphics()->QuadsBegin();
+		This.Graphics()->SetColor(m_Color);
+		This.Graphics()->DrawCircle(Pos.x, Pos.y, m_Radius, 24);
+		This.Graphics()->QuadsEnd();
+	}
+	CNamePlatePartPing(CGameClient &This) :
+		CNamePlatePart(This)
+	{
+		m_Size = vec2(m_Radius, m_Radius) * 2.0f;
+	}
+};
+
+class CNamePlatePartSkin : public CNamePlatePartText
+{
+private:
+	char m_aText[MAX_CLAN_LENGTH] = "";
+	float m_FontSize = -INFINITY;
+
+protected:
+	bool UpdateNeeded(CGameClient &This, const CNamePlateData &Data) override
+	{
+		m_Visible = Data.m_InGame ? g_Config.m_ClShowSkinName > (This.m_Snap.m_apPlayerInfos[Data.m_ClientId]->m_Local ? 1 : 0) : g_Config.m_ClShowSkinName > 0;
+		if(!m_Visible)
+			return false;
+		m_Color = Data.m_Color;
+		const char *pSkin = Data.m_InGame ? This.m_aClients[Data.m_ClientId].m_aSkinName : (Data.m_ClientId == 0 ? g_Config.m_ClPlayerSkin : g_Config.m_ClDummySkin);
+		return m_FontSize != Data.m_FontSizeClan || str_comp(m_aText, pSkin) != 0;
+	}
+	void UpdateText(CGameClient &This, const CNamePlateData &Data) override
+	{
+		m_FontSize = Data.m_FontSizeClan;
+		const char *pSkin = Data.m_InGame ? This.m_aClients[Data.m_ClientId].m_aSkinName : (Data.m_ClientId == 0 ? g_Config.m_ClPlayerSkin : g_Config.m_ClDummySkin);
+		str_copy(m_aText, pSkin, sizeof(m_aText));
+		CTextCursor Cursor;
+		This.TextRender()->SetCursor(&Cursor, 0.0f, 0.0f, m_FontSize, TEXTFLAG_RENDER);
+		This.TextRender()->CreateOrAppendTextContainer(m_TextContainerIndex, &Cursor, m_aText);
+	}
+
+public:
+	CNamePlatePartSkin(CGameClient &This) :
+		CNamePlatePartText(This) {}
+}; // Alesstya2
+
 // Name Plates
 
 class CNamePlate
@@ -484,6 +700,7 @@ private:
 		AddPart<CNamePlatePartDirection>(This, DIRECTION_RIGHT);
 		AddPart<CNamePlatePartNewLine>(This);
 
+		AddPart<CNamePlatePartPing>(This); // Alesstya1
 		AddPart<CNamePlatePartFriendMark>(This);
 		AddPart<CNamePlatePartClientId>(This, false);
 		AddPart<CNamePlatePartName>(This);
@@ -492,7 +709,16 @@ private:
 		AddPart<CNamePlatePartClan>(This);
 		AddPart<CNamePlatePartNewLine>(This);
 
+		AddPart<CNamePlatePartSkin>(This); // Alesstya1
+		AddPart<CNamePlatePartNewLine>(This); // Alesstya2
+
 		AddPart<CNamePlatePartClientId>(This, true);
+		AddPart<CNamePlatePartNewLine>(This);
+
+		AddPart<CNamePlatePartJumps>(This);
+		AddPart<CNamePlatePartNewLine>(This);
+
+		AddPart<CNamePlatePartFlags>(This);
 		AddPart<CNamePlatePartNewLine>(This);
 
 		AddPart<CNamePlatePartHookStrongWeak>(This);
@@ -627,6 +853,9 @@ void CNamePlates::RenderNamePlateGame(vec2 Position, const CNetObj_PlayerInfo *p
 	Data.m_FontSizeHookStrongWeak = 18.0f + 20.0f * g_Config.m_ClNamePlatesStrongSize / 100.0f;
 	Data.m_FontSizeDirection = 18.0f + 20.0f * g_Config.m_ClDirectionSize / 100.0f;
 
+	Data.m_FontSizeFlags = 18.0f + 20.0f * g_Config.m_ClShowFlagsSize / 100.0f;
+	Data.m_FontSizeJumps = 18.0f + 20.0f * g_Config.m_ClShowJumpsSize / 100.0f;
+
 	if(g_Config.m_ClNamePlatesAlways == 0)
 		Alpha *= clamp(1.0f - std::pow(distance(GameClient()->m_Controls.m_aTargetPos[g_Config.m_ClDummy], Position) / 200.0f, 16.0f), 0.0f, 1.0f);
 	if(OtherTeam)
@@ -705,8 +934,14 @@ void CNamePlates::RenderNamePlateGame(vec2 Position, const CNetObj_PlayerInfo *p
 	Data.m_HookStrongWeakState = EHookStrongWeakState::NEUTRAL;
 	Data.m_ShowHookStrongWeakId = false;
 	Data.m_HookStrongWeakId = 0;
+	Data.m_ShowFlags = g_Config.m_ClShowFlags && Data.m_ShowName;
+	Data.m_ShowJumps = g_Config.m_ClShowDJ && Data.m_ShowName;
+	Data.m_TrackedFlags = 0;
+	Data.m_JumpsUsed = 0;
+	Data.m_JumpsLeft = 0;
 
 	const bool Following = (GameClient()->m_Snap.m_SpecInfo.m_Active && !GameClient()->m_MultiViewActivated && GameClient()->m_Snap.m_SpecInfo.m_SpectatorId != SPEC_FREEVIEW);
+	const CGameClient::CSnapState::CCharacterInfo &Other = GameClient()->m_Snap.m_aCharacters[pPlayerInfo->m_ClientId];
 	if(GameClient()->m_Snap.m_LocalClientId != -1 || Following)
 	{
 		const int SelectedId = Following ? GameClient()->m_Snap.m_SpecInfo.m_SpectatorId : GameClient()->m_Snap.m_LocalClientId;
@@ -747,6 +982,58 @@ void CNamePlates::RenderNamePlateGame(vec2 Position, const CNetObj_PlayerInfo *p
 			}
 		}
 	}
+	if(Data.m_ShowJumps || Data.m_ShowFlags)
+	{
+		if(Data.m_ShowFlags && Other.m_HasExtendedData)
+		{
+			Data.m_TrackedFlags = Other.m_ExtendedData.m_Flags &
+					      (CHARACTERFLAG_MOVEMENTS_DISABLED |
+						      CHARACTERFLAG_ENDLESS_HOOK |
+						      CHARACTERFLAG_ENDLESS_JUMP |
+						      CHARACTERFLAG_JETPACK |
+						      CHARACTERFLAG_HOOK_HIT_DISABLED |
+						      CHARACTERFLAG_HAMMER_HIT_DISABLED |
+						      CHARACTERFLAG_COLLISION_DISABLED |
+						      CHARACTERFLAG_TELEGUN_GUN |
+						      CHARACTERFLAG_TELEGUN_LASER |
+						      CHARACTERFLAG_TELEGUN_GRENADE);
+			if(Other.m_ExtendedData.m_FreezeEnd == -1)
+			{
+				Data.m_TrackedFlags |= CHARACTERFLAG_IN_FREEZE;
+			}
+		}
+		else
+		{
+			Data.m_ShowFlags = false;
+		}
+		if(Data.m_ShowJumps && Other.m_HasExtendedData && (Other.m_ExtendedData.m_Flags & CHARACTERFLAG_ENDLESS_JUMP) == 0)
+		{
+			const int JumpsTotal = clamp(Other.m_ExtendedData.m_Jumps - 1, 0, 5);
+			Data.m_JumpsUsed = clamp(Other.m_ExtendedData.m_JumpedTotal, 0, JumpsTotal);
+			Data.m_JumpsLeft = JumpsTotal - Data.m_JumpsUsed;
+		}
+		else
+		{
+			Data.m_ShowJumps = false;
+		}
+		if(GameClient()->m_Snap.m_LocalClientId != -1 || Following)
+		{
+			const int SelectedId = Following ? GameClient()->m_Snap.m_SpecInfo.m_SpectatorId : GameClient()->m_Snap.m_LocalClientId;
+			const CGameClient::CSnapState::CCharacterInfo &Selected = GameClient()->m_Snap.m_aCharacters[SelectedId];
+			if(Selected.m_HasExtendedData && Other.m_HasExtendedData)
+			{
+				Data.m_HookStrongWeakId = Other.m_ExtendedData.m_StrongWeakId;
+				Data.m_ShowHookStrongWeakId = g_Config.m_Debug || g_Config.m_ClNamePlatesStrong == 2;
+				if(SelectedId == pPlayerInfo->m_ClientId)
+					Data.m_ShowHookStrongWeak = Data.m_ShowHookStrongWeakId;
+				else
+				{
+					Data.m_HookStrongWeakState = Selected.m_ExtendedData.m_StrongWeakId > Other.m_ExtendedData.m_StrongWeakId ? EHookStrongWeakState::STRONG : EHookStrongWeakState::WEAK;
+					Data.m_ShowHookStrongWeak = g_Config.m_Debug || g_Config.m_ClNamePlatesStrong > 0;
+				}
+			}
+		}
+	}
 
 	// Check if the nameplate is actually on screen
 	CNamePlate &NamePlate = m_pData->m_aNamePlates[pPlayerInfo->m_ClientId];
@@ -761,6 +1048,9 @@ void CNamePlates::RenderNamePlatePreview(vec2 Position, int Dummy)
 
 	const float FontSizeDirection = 18.0f + 20.0f * g_Config.m_ClDirectionSize / 100.0f;
 	const float FontSizeHookStrongWeak = 18.0f + 20.0f * g_Config.m_ClNamePlatesStrongSize / 100.0f;
+
+	const float FontSizeFlags = 18.0f + 20.0f * g_Config.m_ClShowFlagsSize / 100.0f;
+	const float FontSizeJumps = 18.0f + 20.0f * g_Config.m_ClShowJumpsSize / 100.0f;
 
 	CNamePlateData Data;
 
@@ -815,6 +1105,14 @@ void CNamePlates::RenderNamePlatePreview(vec2 Position, int Dummy)
 		TeeRenderInfo.ApplyColors(g_Config.m_ClDummyUseCustomColor, g_Config.m_ClDummyColorBody, g_Config.m_ClDummyColorFeet);
 	}
 	TeeRenderInfo.m_Size = 64.0f;
+
+	Data.m_ShowFlags = true;
+	Data.m_TrackedFlags = CHARACTERFLAG_JETPACK | CHARACTERFLAG_ENDLESS_JUMP;
+	Data.m_FontSizeFlags = FontSizeFlags;
+	Data.m_ShowJumps = true;
+	Data.m_JumpsLeft = 3;
+	Data.m_JumpsUsed = 2;
+	Data.m_FontSizeJumps = FontSizeJumps;
 
 	CNamePlate NamePlate(*GameClient(), Data);
 	Position.y += NamePlate.Size().y / 2.0f;

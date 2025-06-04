@@ -24,6 +24,11 @@
 #include <game/generated/protocolglue.h>
 
 // components
+#include "components/alesstya/alesstya.h" // Alesstya1
+#include "components/alesstya/bindwheel.h"
+#include "components/alesstya/outlines.h"
+#include "components/alesstya/skinprofiles.h"
+#include "components/alesstya/trails.h" // Alesstya2
 #include "components/background.h"
 #include "components/binds.h"
 #include "components/broadcast.h"
@@ -129,6 +134,8 @@ enum class EClientIdFormat
 class CGameClient : public IGameClient
 {
 public:
+	friend class CAlesstya;
+
 	// all components
 	CInfoMessages m_InfoMessages;
 	CCamera m_Camera;
@@ -173,6 +180,13 @@ public:
 	CGhost m_Ghost;
 
 	CTooltips m_Tooltips;
+
+	// Alesstya1
+	CSkinProfiles m_SkinProfiles;
+	CBindWheel m_BindWheel;
+	CAlesstya m_Alesstya;
+	CTrails m_Trails;
+	COutlines m_Outlines;
 
 private:
 	std::vector<class CComponent *> m_vpAll;
@@ -461,6 +475,10 @@ public:
 		CCharacterCore m_Predicted;
 		CCharacterCore m_PrevPredicted;
 
+		vec2 m_ImprovedPredPos = vec2(0, 0); // Alesstya1
+		vec2 m_PrevImprovedPredPos = vec2(0, 0);
+		float m_Uncertainty = 0.0f; // Alesstya2
+
 		std::shared_ptr<CManagedTeeRenderInfo> m_pSkinInfo = nullptr; // this is what the server reports
 		CTeeRenderInfo m_RenderInfo; // this is what we use
 
@@ -519,6 +537,9 @@ public:
 	};
 
 	CClientData m_aClients[MAX_CLIENTS];
+
+	int m_SmoothTick[2] = {}; // Alesstya1
+	float m_SmoothIntraTick[2] = {}; // Alesstya2
 
 	class CClientStats
 	{
@@ -666,6 +687,9 @@ public:
 	CGameWorld m_PredictedWorld;
 	CGameWorld m_PrevPredictedWorld;
 
+	CGameWorld m_ExtraPredictedWorld; // Alesstya1
+	CGameWorld m_PredSmoothingWorld; // Alesstya2
+
 	std::vector<SSwitchers> &Switchers() { return m_GameWorld.m_Core.m_vSwitchers; }
 	std::vector<SSwitchers> &PredSwitchers() { return m_PredictedWorld.m_Core.m_vSwitchers; }
 
@@ -677,6 +701,8 @@ public:
 	bool CanDisplayWarning() const override;
 	CNetObjHandler *GetNetObjHandler() override;
 	protocol7::CNetObjHandler *GetNetObjHandler7() override;
+
+	bool CheckNewInput() override; // Alesstya1
 
 	void LoadGameSkin(const char *pPath, bool AsDir = false);
 	void LoadEmoticonsSkin(const char *pPath, bool AsDir = false);
@@ -849,6 +875,8 @@ public:
 
 	const std::vector<CSnapEntities> &SnapEntities() { return m_vSnapEntities; }
 
+	vec2 GetSmoothPos(int ClientId); // Alesstya1
+	vec2 GetFreezePos(int ClientId); // Alesstya2
 	int m_MultiViewTeam;
 	float m_MultiViewPersonalZoom;
 	bool m_MultiViewShowHud;
@@ -876,7 +904,7 @@ private:
 	int m_aLastUpdateTick[MAX_CLIENTS] = {0};
 	void DetectStrongHook();
 
-	vec2 GetSmoothPos(int ClientId);
+	//vec2 GetSmoothPos(int ClientId); // Alesstya1
 
 	int m_PredictedDummyId;
 	int m_IsDummySwapping;

@@ -347,6 +347,12 @@ void CVoting::Render()
 		return;
 	}
 
+	if(g_Config.m_ClMiniVoteHud > 0) // Alesstya1
+	{
+		GameClient()->m_Alesstya.RenderMiniVoteHud();
+		return;
+	} // Alesstya2
+
 	CUIRect View = {0.0f, 60.0f, 120.0f, 38.0f};
 	View.Draw(ColorRGBA(0.0f, 0.0f, 0.0f, 0.4f), IGraphics::CORNER_R, 3.0f);
 	View.Margin(3.0f, &View);
