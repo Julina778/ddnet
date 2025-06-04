@@ -30,7 +30,6 @@ MACRO_CONFIG_INT(ClPingNameCircle, al_nameplate_ping_circle, 0, 0, 1, CFGFLAG_CL
 MACRO_CONFIG_INT(ClMiniVoteHud, al_mini_vote_hud, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "When enabled makes the vote UI small")
 
 // Anti Latency Tools
-MACRO_CONFIG_INT(ClFreezeUpdateFix, al_freeze_update_fix, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Will change your skin faster when you enter freeze. ")
 MACRO_CONFIG_INT(ClRemoveAnti, al_remove_anti, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Removes some amount of antiping & player prediction in freeze")
 MACRO_CONFIG_INT(ClUnfreezeLagTicks, al_remove_anti_ticks, 5, 0, 20, CFGFLAG_CLIENT | CFGFLAG_SAVE, "The biggest amount of prediction ticks that are removed")
 MACRO_CONFIG_INT(ClUnfreezeLagDelayTicks, al_remove_anti_delay_ticks, 25, 5, 150, CFGFLAG_CLIENT | CFGFLAG_SAVE, "How many ticks it takes to remove the maximum prediction after being frozen")
@@ -242,6 +241,3 @@ MACRO_CONFIG_INT(ClShowJumpsSize, al_show_jumps_size, 30, -50, 100, CFGFLAG_CLIE
 
 // Flags
 //MACRO_CONFIG_INT(ClTClientSettingsTabs, al_tclient_settings_tabs, 0, 0, 65536, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Bit flags to disable settings tabs")
-
-// AAAAAAA
-MACRO_CONFIG_INT(ClAmIFrozen, EEEfrz, 0, 0, 1, CFGFLAG_CLIENT, "")

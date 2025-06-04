@@ -3711,18 +3711,9 @@ void CGameClient::UpdateRenderedCharacters()
 		vec2 Pos = UnpredPos;
 
 		CCharacter *pChar = m_PredictedWorld.GetCharacterById(i);
-		// TODO: @Tater remove this garbage // Alesstya1
+		// Alesstya1
 		if(i == m_Snap.m_LocalClientId)
-		{
-			if(pChar && pChar->m_FreezeTime > 0)
-			{
-				g_Config.m_ClAmIFrozen = 1;
-			}
-			else
-			{
-				g_Config.m_ClAmIFrozen = 0;
-			}
-		} // Alesstya2
+			Client()->m_IsLocalFrozen = pChar && pChar->m_FreezeTime > 0; // Alesstya2
 
 		if(Predict() && (i == m_Snap.m_LocalClientId || (AntiPingPlayers() && !IsOtherTeam(i))) && pChar)
 		{
@@ -3761,13 +3752,13 @@ void CGameClient::UpdateRenderedCharacters()
 				if(g_Config.m_ClAntiPingImproved) // Alesstya1
 					Pos = mix(m_aClients[i].m_PrevImprovedPredPos, m_aClients[i].m_ImprovedPredPos, Client()->PredIntraGameTick(g_Config.m_ClDummy));
 
-				if(g_Config.m_ClRemoveAnti && g_Config.m_ClAmIFrozen)
+				if(g_Config.m_ClRemoveAnti && m_pClient->m_IsLocalFrozen)
 					Pos = GetFreezePos(i);
 
 				if(g_Config.m_ClShowOthersGhosts && g_Config.m_ClSwapGhosts && !(m_aClients[i].m_FreezeEnd > 0 && g_Config.m_ClHideFrozenGhosts))
 					Pos = UnpredPos;
 
-				if(g_Config.m_ClUnpredOthersInFreeze && g_Config.m_ClAmIFrozen)
+				if(g_Config.m_ClUnpredOthersInFreeze && m_pClient->m_IsLocalFrozen)
 					Pos = UnpredPos; // Alesstya2
 			}
 		}
