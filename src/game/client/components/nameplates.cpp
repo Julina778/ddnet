@@ -941,11 +941,11 @@ void CNamePlates::RenderNamePlateGame(vec2 Position, const CNetObj_PlayerInfo *p
 	Data.m_JumpsLeft = 0;
 
 	const bool Following = (GameClient()->m_Snap.m_SpecInfo.m_Active && !GameClient()->m_MultiViewActivated && GameClient()->m_Snap.m_SpecInfo.m_SpectatorId != SPEC_FREEVIEW);
-	const CGameClient::CSnapState::CCharacterInfo &Other = GameClient()->m_Snap.m_aCharacters[pPlayerInfo->m_ClientId];
 	if(GameClient()->m_Snap.m_LocalClientId != -1 || Following)
 	{
 		const int SelectedId = Following ? GameClient()->m_Snap.m_SpecInfo.m_SpectatorId : GameClient()->m_Snap.m_LocalClientId;
 		const CGameClient::CSnapState::CCharacterInfo &Selected = GameClient()->m_Snap.m_aCharacters[SelectedId];
+		const CGameClient::CSnapState::CCharacterInfo &Other = GameClient()->m_Snap.m_aCharacters[pPlayerInfo->m_ClientId];
 
 		const bool ShouldShowIndicator = Other.m_HasExtendedData && (GameClient()->m_Snap.m_pLocalInfo && (GameClient()->m_Snap.m_pLocalInfo->m_Team != TEAM_SPECTATORS || Following));
 
@@ -1014,23 +1014,6 @@ void CNamePlates::RenderNamePlateGame(vec2 Position, const CNetObj_PlayerInfo *p
 		else
 		{
 			Data.m_ShowJumps = false;
-		}
-		if(GameClient()->m_Snap.m_LocalClientId != -1 || Following)
-		{
-			const int SelectedId = Following ? GameClient()->m_Snap.m_SpecInfo.m_SpectatorId : GameClient()->m_Snap.m_LocalClientId;
-			const CGameClient::CSnapState::CCharacterInfo &Selected = GameClient()->m_Snap.m_aCharacters[SelectedId];
-			if(Selected.m_HasExtendedData && Other.m_HasExtendedData)
-			{
-				Data.m_HookStrongWeakId = Other.m_ExtendedData.m_StrongWeakId;
-				Data.m_ShowHookStrongWeakId = g_Config.m_Debug || g_Config.m_ClNamePlatesStrong == 2;
-				if(SelectedId == pPlayerInfo->m_ClientId)
-					Data.m_ShowHookStrongWeak = Data.m_ShowHookStrongWeakId;
-				else
-				{
-					Data.m_HookStrongWeakState = Selected.m_ExtendedData.m_StrongWeakId > Other.m_ExtendedData.m_StrongWeakId ? EHookStrongWeakState::STRONG : EHookStrongWeakState::WEAK;
-					Data.m_ShowHookStrongWeak = g_Config.m_Debug || g_Config.m_ClNamePlatesStrong > 0;
-				}
-			}
 		}
 	}
 
