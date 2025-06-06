@@ -465,7 +465,7 @@ void CMenus::RenderSettingsAlesstyaSettngs(CUIRect MainView)
 	}
 
 	static CButtonContainer s_FontDirectoryId;
-	if(DoButton_FontIcon(&s_FontDirectoryId, FONT_ICON_FOLDER, 0, &FontDirectory, IGraphics::CORNER_ALL))
+	if(Ui()->DoButton_FontIcon(&s_FontDirectoryId, FONT_ICON_FOLDER, 0, &FontDirectory, IGraphics::CORNER_ALL))
 	{
 		Storage()->CreateFolder("data/alesstya", IStorage::TYPE_ABSOLUTE);
 		Storage()->CreateFolder("data/alesstya/fonts", IStorage::TYPE_ABSOLUTE);
@@ -474,7 +474,6 @@ void CMenus::RenderSettingsAlesstyaSettngs(CUIRect MainView)
 
 	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
 
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClFreezeUpdateFix, Localize("Update tee skin faster after being frozen"), &g_Config.m_ClFreezeUpdateFix, &Column, LineSize);
 	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClPingNameCircle, Localize("Show ping colored circle before names"), &g_Config.m_ClPingNameCircle, &Column, LineSize);
 	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClShowSkinName, Localize("Show skin names in nameplate"), &g_Config.m_ClShowSkinName, &Column, LineSize);
 
