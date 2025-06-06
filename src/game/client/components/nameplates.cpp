@@ -610,7 +610,7 @@ public:
 		if(!m_Visible)
 			return;
 		int ping = Data.m_InGame ? This.m_Snap.m_apPlayerInfos[Data.m_ClientId]->m_Latency : (1 + Data.m_ClientId) * 25;
-		m_Color = color_cast<ColorRGBA>(ColorHSLA((float)(300 - clamp(ping, 0, 300)) / 1000.0f, 1.0f, 0.5f, Data.m_Color.a));
+		m_Color = color_cast<ColorRGBA>(ColorHSLA((float)(300 - std::clamp(ping, 0, 300)) / 1000.0f, 1.0f, 0.5f, Data.m_Color.a));
 	}
 	void Render(CGameClient &This, vec2 Pos) const override
 	{
@@ -1007,8 +1007,8 @@ void CNamePlates::RenderNamePlateGame(vec2 Position, const CNetObj_PlayerInfo *p
 		}
 		if(Data.m_ShowJumps && Other.m_HasExtendedData && (Other.m_ExtendedData.m_Flags & CHARACTERFLAG_ENDLESS_JUMP) == 0)
 		{
-			const int JumpsTotal = clamp(Other.m_ExtendedData.m_Jumps - 1, 0, 5);
-			Data.m_JumpsUsed = clamp(Other.m_ExtendedData.m_JumpedTotal, 0, JumpsTotal);
+			const int JumpsTotal = std::clamp(Other.m_ExtendedData.m_Jumps - 1, 0, 5);
+			Data.m_JumpsUsed = std::clamp(Other.m_ExtendedData.m_JumpedTotal, 0, JumpsTotal);
 			Data.m_JumpsLeft = JumpsTotal - Data.m_JumpsUsed;
 		}
 		else
