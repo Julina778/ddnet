@@ -1953,7 +1953,7 @@ void CClient::ProcessServerPacket(CNetChunk *pPacket, int Conn, bool Dummy)
 					m_aSnapshotIncomingDataSize[Conn] = 0;
 				}
 
-				mem_copy((char *)m_aaSnapshotIncomingData[Conn] + Part * MAX_SNAPSHOT_PACKSIZE, pData, clamp(PartSize, 0, (int)sizeof(m_aaSnapshotIncomingData[Conn]) - Part * MAX_SNAPSHOT_PACKSIZE));
+				mem_copy((char *)m_aaSnapshotIncomingData[Conn] + Part * MAX_SNAPSHOT_PACKSIZE, pData, std::clamp(PartSize, 0, (int)sizeof(m_aaSnapshotIncomingData[Conn]) - Part * MAX_SNAPSHOT_PACKSIZE));
 				m_aSnapshotParts[Conn] |= (uint64_t)(1) << Part;
 
 				if(Part == NumParts - 1)
@@ -2433,7 +2433,10 @@ void CClient::LoadDDNetInfo()
 	const json_value *pDDNetInfo = m_ServerBrowser.LoadDDNetInfo();
 
 	if(!pDDNetInfo)
+	{
+		m_InfoState = EInfoState::ERROR;
 		return;
+	}
 
 	const json_value &DDNetInfo = *pDDNetInfo;
 	const json_value &CurrentVersion = DDNetInfo["version"];
@@ -2507,6 +2510,7 @@ void CClient::LoadDDNetInfo()
 	}
 	const json_value &WarnPngliteIncompatibleImages = DDNetInfo["warn-pnglite-incompatible-images"];
 	Graphics()->WarnPngliteIncompatibleImages(WarnPngliteIncompatibleImages.type == json_boolean && (bool)WarnPngliteIncompatibleImages);
+	m_InfoState = EInfoState::SUCCESS;
 }
 
 int CClient::ConnectNetTypes() const
@@ -2901,6 +2905,7 @@ void CClient::Update()
 			if(m_ServerBrowser.DDNetInfoSha256() == m_pDDNetInfoTask->ResultSha256())
 			{
 				log_debug("client/info", "DDNet info already up-to-date");
+				m_InfoState = EInfoState::SUCCESS;
 			}
 			else
 			{
@@ -2913,6 +2918,7 @@ void CClient::Update()
 		else if(m_pDDNetInfoTask->State() == EHttpState::ERROR || m_pDDNetInfoTask->State() == EHttpState::ABORTED)
 		{
 			ResetDDNetInfoTask();
+			m_InfoState = EInfoState::ERROR;
 		}
 	}
 
@@ -5037,6 +5043,7 @@ void CClient::RequestDDNetInfo()
 	// Use ipv4 so we can know the ingame ip addresses of players before they join game servers
 	m_pDDNetInfoTask->IpResolve(IPRESOLVE::V4);
 	Http()->Run(m_pDDNetInfoTask);
+	m_InfoState = EInfoState::LOADING;
 }
 
 int CClient::GetPredictionTime()
@@ -5079,7 +5086,7 @@ void CClient::GetSmoothTick(int *pSmoothTick, float *pSmoothIntraTick, float Mix
 	int64_t GameTime = m_aGameTime[g_Config.m_ClDummy].Get(time_get());
 	int64_t PredTime = m_PredictedTime.Get(time_get());
 	GameTime = std::min(GameTime, PredTime); // Alesstya1
-	int64_t SmoothTime = clamp(GameTime + (int64_t)(MixAmount * (PredTime - GameTime)), GameTime, PredTime);
+	int64_t SmoothTime = std::clamp(GameTime + (int64_t)(MixAmount * (PredTime - GameTime)), GameTime, PredTime);
 
 	*pSmoothTick = (int)(SmoothTime * GameTickSpeed() / time_freq()) + 1;
 	*pSmoothIntraTick = (SmoothTime - (*pSmoothTick - 1) * time_freq() / GameTickSpeed()) / (float)(time_freq() / GameTickSpeed());
