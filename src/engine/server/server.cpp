@@ -46,6 +46,10 @@
 #include "databases/connection_pool.h"
 #include "register.h"
 
+#include <chrono>
+
+using namespace std::chrono_literals;
+
 extern bool IsInterrupted();
 
 #if defined(CONF_PLATFORM_ANDROID)
@@ -2748,10 +2752,14 @@ int CServer::LoadMap(const char *pMapName)
 
 	char aBuf[IO_MAX_PATH_LENGTH];
 	str_format(aBuf, sizeof(aBuf), "maps/%s.map", pMapName);
-	GameServer()->OnMapChange(aBuf, sizeof(aBuf));
-
-	if(!m_pMap->Load(aBuf))
+	if(!GameServer()->OnMapChange(aBuf, sizeof(aBuf)))
+	{
 		return 0;
+	}
+	if(!m_pMap->Load(aBuf))
+	{
+		return 0;
+	}
 
 	// reinit snapshot ids
 	m_IdPool.TimeoutIds();
@@ -3024,7 +3032,7 @@ int CServer::Run()
 
 			set_new_tick();
 
-			int64_t t = time_get();
+			int64_t LastTime = time_get();
 			int NewTicks = 0;
 
 			// load new map
@@ -3096,7 +3104,7 @@ int CServer::Run()
 				}
 			}
 
-			while(t > TickStartTime(m_CurrentGameTick + 1))
+			while(LastTime > TickStartTime(m_CurrentGameTick + 1))
 			{
 				GameServer()->OnPreTickTeehistorian();
 
@@ -3270,15 +3278,14 @@ int CServer::Run()
 				!m_aDemoRecorder[RECORDER_MANUAL].IsRecording() &&
 				!m_aDemoRecorder[RECORDER_AUTO].IsRecording())
 			{
-				PacketWaiting = net_socket_read_wait(m_NetServer.Socket(), 1000000);
+				PacketWaiting = net_socket_read_wait(m_NetServer.Socket(), 1s);
 			}
 			else
 			{
 				set_new_tick();
-				t = time_get();
-				int x = (TickStartTime(m_CurrentGameTick + 1) - t) * 1000000 / time_freq() + 1;
-
-				PacketWaiting = x > 0 ? net_socket_read_wait(m_NetServer.Socket(), x) : true;
+				LastTime = time_get();
+				const auto MicrosecondsToWait = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::nanoseconds(TickStartTime(m_CurrentGameTick + 1) - LastTime)) + 1us;
+				PacketWaiting = MicrosecondsToWait > 0us ? net_socket_read_wait(m_NetServer.Socket(), MicrosecondsToWait) : true;
 			}
 			if(IsInterrupted())
 			{
