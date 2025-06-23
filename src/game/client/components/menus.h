@@ -859,6 +859,7 @@ private:
 	void RenderSettingsAppearance(CUIRect MainView);
 
 	void RenderSettingsAlesstya(CUIRect MainView); // Alesstya1
+	void RenderSettingsAlesstyaSettngs2(CUIRect MainView);
 	void RenderSettingsAlesstyaSettngs(CUIRect MainView);
 	void RenderSettingsProfiles(CUIRect MainView);
 	void RenderSettingsInfo(CUIRect MainView);

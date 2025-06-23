@@ -194,6 +194,8 @@ MACRO_CONFIG_INT(ClTeeTrailColorMode, al_tee_trail_color_mode, 2, 1, 5, CFGFLAG_
 //MACRO_CONFIG_STR(ClAutoReplyMutedMessage, al_auto_reply_muted_message, 128, "I have muted you", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Message to reply to muted players")
 MACRO_CONFIG_INT(ClAutoReplyMinimized, al_auto_reply_minimized, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Auto reply when your game is minimized")
 MACRO_CONFIG_STR(ClAutoReplyMinimizedMessage, al_auto_reply_minimized_message, 128, "I am not tabbed in", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Message to reply when your game is minimized")
+//MACRO_CONFIG_INT(ClAutoReplyAfk, al_auto_reply_afk, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Auto reply when you AFK")
+//MACRO_CONFIG_STR(ClAutoReplyAfkMessage, al_auto_reply_afk_message, 128, "I am currently afk", CFGFLAG_CLIENT | CFGFLAG_SAVE, "Message to reply when you AFK")
 
 // Voting
 //MACRO_CONFIG_INT(ClAutoVoteWhenFar, al_auto_vote_when_far, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Auto vote no if you far on a map")
