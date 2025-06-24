@@ -36,6 +36,7 @@
 enum
 {
 	ALESSTYA_TAB_SETTINGS = 0,
+	ALESSTYA_TAB_SETTINGS2,
 	ALESSTYA_TAB_BINDWHEEL,
 	ALESSTYA_TAB_INFO,
 	NUMBER_OF_ALESSTYA_TABS
@@ -170,7 +171,8 @@ void CMenus::RenderSettingsAlesstya(CUIRect MainView)
 	const float TabWidth = TabBar.w / NUMBER_OF_ALESSTYA_TABS;
 	static CButtonContainer s_aPageTabs[NUMBER_OF_ALESSTYA_TABS] = {};
 	const char *apTabNames[] = {
-		Localize("Settings"),
+		Localize("Page 1"),
+		Localize("Page 2"),
 		Localize("Bindwheel"),
 		Localize("Info")};
 
@@ -187,6 +189,10 @@ void CMenus::RenderSettingsAlesstya(CUIRect MainView)
 	if(s_CurCustomTab == ALESSTYA_TAB_SETTINGS)
 	{
 		RenderSettingsAlesstyaSettngs(MainView);
+	}
+	else if(s_CurCustomTab == ALESSTYA_TAB_SETTINGS2)
+	{
+		RenderSettingsAlesstyaSettngs2(MainView);
 	}
 	else if(s_CurCustomTab == ALESSTYA_TAB_BINDWHEEL)
 	{
@@ -652,49 +658,6 @@ void CMenus::RenderSettingsAlesstyaSettngs(CUIRect MainView)
 	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
 	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
 
-	// ***** Grenade & Laser Prediction ***** //
-	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
-	s_SectionBoxes.push_back(Column);
-	Column.HSplitTop(HeadlineHeight, &Label, &Column);
-	Ui()->DoLabel(&Label, Localize("Grenade & Laser Prediction"), HeadlineFontSize, TEXTALIGN_ML);
-	Column.HSplitTop(MarginSmall, nullptr, &Column);
-
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClGrenadePath, Localize("Grenade path prediction"), &g_Config.m_ClGrenadePath, &Column, LineSize);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClLaserPath, Localize("Laser path prediction"), &g_Config.m_ClLaserPath, &Column, LineSize);
-
-	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
-	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
-
-	// ***** Tee Stats ***** //
-	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
-	s_SectionBoxes.push_back(Column);
-	Column.HSplitTop(HeadlineHeight, &Label, &Column);
-	Ui()->DoLabel(&Label, Localize("Show Tee Stats"), HeadlineFontSize, TEXTALIGN_ML);
-	Column.HSplitTop(MarginSmall, nullptr, &Column);
-
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClShowFlags, Localize("Show Tee Stats (Deep/Jetpack/etc)"), &g_Config.m_ClShowFlags, &Column, LineSize);
-	if(g_Config.m_ClShowFlags)
-	{
-		Column.HSplitTop(LineSize, &Button, &Column);
-		Ui()->DoScrollbarOption(&g_Config.m_ClShowFlagsSize, &g_Config.m_ClShowFlagsSize, &Button, Localize("Size of tee stat"), -50, 100);
-	}
-	else
-		Column.HSplitTop(LineSize, nullptr, &Column);
-
-	Column.HSplitTop(MarginExtraSmall * 3.0f, nullptr, &Column);
-
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClShowDJ, Localize("Show double jumps of a tee"), &g_Config.m_ClShowDJ, &Column, LineSize);
-	if(g_Config.m_ClShowDJ)
-	{
-		Column.HSplitTop(LineSize, &Button, &Column);
-		Ui()->DoScrollbarOption(&g_Config.m_ClShowJumpsSize, &g_Config.m_ClShowJumpsSize, &Button, Localize("Size of double jump"), -50, 100);
-	}
-	else
-		Column.HSplitTop(LineSize, nullptr, &Column);
-
-	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
-	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
-
 	// ***** Tile Outlines ***** //
 	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
 	s_SectionBoxes.push_back(Column);
@@ -823,6 +786,147 @@ void CMenus::RenderSettingsAlesstyaSettngs(CUIRect MainView)
 	Column.HSplitTop(MarginSmall, nullptr, &Column);
 
 	// ***** END OF PAGE 1 SETTINGS ***** //
+	RightView = Column;
+
+	// Scroll
+	CUIRect ScrollRegion;
+	ScrollRegion.x = MainView.x;
+	ScrollRegion.y = maximum(LeftView.y, RightView.y) + MarginSmall * 2.0f;
+	ScrollRegion.w = MainView.w;
+	ScrollRegion.h = 0.0f;
+	s_ScrollRegion.AddRect(ScrollRegion);
+	s_ScrollRegion.End();
+}
+
+void CMenus::RenderSettingsAlesstyaSettngs2(CUIRect MainView)
+{
+	CUIRect Column, LeftView, RightView, Button, Label;
+
+	static CScrollRegion s_ScrollRegion;
+	vec2 ScrollOffset(0.0f, 0.0f);
+	CScrollRegionParams ScrollParams;
+	ScrollParams.m_ScrollUnit = 120.0f;
+	ScrollParams.m_Flags = CScrollRegionParams::FLAG_CONTENT_STATIC_WIDTH;
+	ScrollParams.m_ScrollbarMargin = 5.0f;
+	s_ScrollRegion.Begin(&MainView, &ScrollOffset, &ScrollParams);
+
+	static std::vector<CUIRect> s_SectionBoxes;
+	static vec2 s_PrevScrollOffset(0.0f, 0.0f);
+
+	MainView.y += ScrollOffset.y;
+
+	MainView.VSplitRight(5.0f, &MainView, nullptr); // Padding for scrollbar
+	MainView.VSplitLeft(5.0f, nullptr, &MainView); // Padding for scrollbar
+
+	MainView.VSplitMid(&LeftView, &RightView, MarginBetweenViews);
+	LeftView.VSplitLeft(MarginSmall, nullptr, &LeftView);
+	RightView.VSplitRight(MarginSmall, &RightView, nullptr);
+
+	// RightView.VSplitRight(10.0f, &RightView, nullptr);
+	for(CUIRect &Section : s_SectionBoxes)
+	{
+		float Padding = MarginBetweenViews * 0.6666f;
+		Section.w += Padding;
+		Section.h += Padding;
+		Section.x -= Padding * 0.5f;
+		Section.y -= Padding * 0.5f;
+		Section.y -= s_PrevScrollOffset.y - ScrollOffset.y;
+		float Shade = 0.0f;
+		Section.Draw(ColorRGBA(Shade, Shade, Shade, 0.25f), IGraphics::CORNER_ALL, 10.0f);
+	}
+	s_PrevScrollOffset = ScrollOffset;
+	s_SectionBoxes.clear();
+
+	// ***** LeftView ***** //
+	Column = LeftView;
+
+	// ***** Input ***** //
+	Column.HSplitTop(Margin, nullptr, &Column);
+	s_SectionBoxes.push_back(Column);
+	Column.HSplitTop(HeadlineHeight, &Label, &Column);
+	Ui()->DoLabel(&Label, Localize("Input"), HeadlineFontSize, TEXTALIGN_ML);
+	Column.HSplitTop(MarginSmall, nullptr, &Column);
+
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClFastInput, Localize("Fast Inputs (-20ms visual delay)"), &g_Config.m_ClFastInput, &Column, LineSize);
+
+	Column.HSplitTop(MarginSmall, nullptr, &Column);
+	if(g_Config.m_ClFastInput)
+		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClFastInputOthers, Localize("Extra tick other tees (increases other tees latency, \nmakes dragging slightly easier when using fast input)"), &g_Config.m_ClFastInputOthers, &Column, LineSize);
+	else
+		Column.HSplitTop(LineSize, nullptr, &Column);
+	// A little extra spacing because these are multi line
+	Column.HSplitTop(MarginSmall, nullptr, &Column);
+
+	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
+
+	// ***** Auto Reply ***** //
+	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
+	s_SectionBoxes.push_back(Column);
+	Column.HSplitTop(HeadlineHeight, &Label, &Column);
+	Ui()->DoLabel(&Label, Localize("Auto Reply"), HeadlineFontSize, TEXTALIGN_ML);
+	Column.HSplitTop(MarginSmall, nullptr, &Column);
+
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClAutoReplyMinimized, Localize("Auto reply when tabbed out"), &g_Config.m_ClAutoReplyMinimized, &Column, LineSize);
+	CUIRect MinimizedReply;
+	Column.HSplitTop(LineSize + MarginExtraSmall, &MinimizedReply, &Column);
+	if(g_Config.m_ClAutoReplyMinimized)
+	{
+		MinimizedReply.HSplitTop(MarginExtraSmall, nullptr, &MinimizedReply);
+		static CLineInput s_MinimizedReply(g_Config.m_ClAutoReplyMinimizedMessage, sizeof(g_Config.m_ClAutoReplyMinimizedMessage));
+		s_MinimizedReply.SetEmptyText("I am not tabbed in");
+		Ui()->DoEditBox(&s_MinimizedReply, &MinimizedReply, EditBoxFontSize);
+	}
+	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
+	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
+
+	// ***** RightView ***** //
+	LeftView = Column;
+	Column = RightView;
+
+	// ***** Grenade & Laser Prediction ***** //
+	Column.HSplitTop(Margin, nullptr, &Column);
+	s_SectionBoxes.push_back(Column);
+	Column.HSplitTop(HeadlineHeight, &Label, &Column);
+	Ui()->DoLabel(&Label, Localize("Grenade & Laser Prediction"), HeadlineFontSize, TEXTALIGN_ML);
+	Column.HSplitTop(MarginSmall, nullptr, &Column);
+
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClGrenadePath, Localize("Grenade path prediction"), &g_Config.m_ClGrenadePath, &Column, LineSize);
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClLaserPath, Localize("Laser path prediction"), &g_Config.m_ClLaserPath, &Column, LineSize);
+
+	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
+	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
+
+	// ***** Tee Stats ***** //
+	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
+	s_SectionBoxes.push_back(Column);
+	Column.HSplitTop(HeadlineHeight, &Label, &Column);
+	Ui()->DoLabel(&Label, Localize("Show Tee Stats"), HeadlineFontSize, TEXTALIGN_ML);
+	Column.HSplitTop(MarginSmall, nullptr, &Column);
+
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClShowFlags, Localize("Show Tee Stats (Deep/Jetpack/etc)"), &g_Config.m_ClShowFlags, &Column, LineSize);
+	if(g_Config.m_ClShowFlags)
+	{
+		Column.HSplitTop(LineSize, &Button, &Column);
+		Ui()->DoScrollbarOption(&g_Config.m_ClShowFlagsSize, &g_Config.m_ClShowFlagsSize, &Button, Localize("Size of tee stat"), -50, 100);
+	}
+	else
+		Column.HSplitTop(LineSize, nullptr, &Column);
+
+	Column.HSplitTop(MarginExtraSmall * 3.0f, nullptr, &Column);
+
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_ClShowDJ, Localize("Show double jumps of a tee"), &g_Config.m_ClShowDJ, &Column, LineSize);
+	if(g_Config.m_ClShowDJ)
+	{
+		Column.HSplitTop(LineSize, &Button, &Column);
+		Ui()->DoScrollbarOption(&g_Config.m_ClShowJumpsSize, &g_Config.m_ClShowJumpsSize, &Button, Localize("Size of double jump"), -50, 100);
+	}
+	else
+		Column.HSplitTop(LineSize, nullptr, &Column);
+
+	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
+	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
+
+	// ***** END OF PAGE 2 SETTINGS ***** //
 	RightView = Column;
 
 	// Scroll
