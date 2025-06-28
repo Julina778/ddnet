@@ -565,22 +565,22 @@ void CHud::RenderTextInfo()
 		int NumInTeam = 0;
 		int NumFrozen = 0;
 		int LocalTeamID = 0;
-		if(m_pClient->m_Snap.m_LocalClientId >= 0 && m_pClient->m_Snap.m_SpecInfo.m_SpectatorId >= 0)
+		if(GameClient()->m_Snap.m_LocalClientId >= 0 && GameClient()->m_Snap.m_SpecInfo.m_SpectatorId >= 0)
 		{
-			if(m_pClient->m_Snap.m_SpecInfo.m_Active == 1 && m_pClient->m_Snap.m_SpecInfo.m_SpectatorId != -1)
-				LocalTeamID = m_pClient->m_Teams.Team(m_pClient->m_Snap.m_SpecInfo.m_SpectatorId);
+			if(GameClient()->m_Snap.m_SpecInfo.m_Active == 1 && GameClient()->m_Snap.m_SpecInfo.m_SpectatorId != -1)
+				LocalTeamID = GameClient()->m_Teams.Team(GameClient()->m_Snap.m_SpecInfo.m_SpectatorId);
 			else
-				LocalTeamID = m_pClient->m_Teams.Team(m_pClient->m_Snap.m_LocalClientId);
+				LocalTeamID = GameClient()->m_Teams.Team(GameClient()->m_Snap.m_LocalClientId);
 		}
 		for(int i = 0; i < MAX_CLIENTS; i++)
 		{
-			if(!m_pClient->m_Snap.m_apPlayerInfos[i])
+			if(!GameClient()->m_Snap.m_apPlayerInfos[i])
 				continue;
 
-			if(m_pClient->m_Teams.Team(i) == LocalTeamID)
+			if(GameClient()->m_Teams.Team(i) == LocalTeamID)
 			{
 				NumInTeam++;
-				if(m_pClient->m_aClients[i].m_FreezeEnd > 0 || m_pClient->m_aClients[i].m_DeepFrozen)
+				if(GameClient()->m_aClients[i].m_FreezeEnd > 0 || GameClient()->m_aClients[i].m_DeepFrozen)
 					NumFrozen++;
 			}
 		}
@@ -608,14 +608,14 @@ void CHud::RenderTextInfo()
 		if(g_Config.m_ClShowFrozenText > 0)
 			TextRender()->Text(m_Width / 2.0f - TextRender()->TextWidth(10.0f, aBuf) / 2.0f, 12.0f, 10.0f, aBuf);
 
-		// str_format(aBuf, sizeof(aBuf), "%d", m_pClient->m_aClients[m_pClient->m_Snap.m_LocalClientId].m_PrevPredicted.m_FreezeEnd);
+		// str_format(aBuf, sizeof(aBuf), "%d", GameClient()->m_aClients[GameClient()->m_Snap.m_LocalClientId].m_PrevPredicted.m_FreezeEnd);
 		// str_format(aBuf, sizeof(aBuf), "%d", g_Config.m_ClWhatsMyPing);
 		// TextRender()->Text(0, m_Width / 2 - TextRender()->TextWidth(0, 10, aBuf, -1, -1.0f) / 2, 20, 10, aBuf, -1.0f);
 
-		if(g_Config.m_ClShowFrozenHud > 0 && !m_pClient->m_Scoreboard.IsActive() && !(LocalTeamID == 0 && g_Config.m_ClFrozenHudTeamOnly))
+		if(g_Config.m_ClShowFrozenHud > 0 && !GameClient()->m_Scoreboard.IsActive() && !(LocalTeamID == 0 && g_Config.m_ClFrozenHudTeamOnly))
 		{
 			CTeeRenderInfo FreezeInfo;
-			const CSkin *pSkin = m_pClient->m_Skins.Find("x_ninja");
+			const CSkin *pSkin = GameClient()->m_Skins.Find("x_ninja");
 			FreezeInfo.m_OriginalRenderSkin = pSkin->m_OriginalSkin;
 			FreezeInfo.m_ColorableRenderSkin = pSkin->m_ColorableSkin;
 			FreezeInfo.m_BloodColor = pSkin->m_BloodColor;
@@ -649,13 +649,13 @@ void CHud::RenderTextInfo()
 			{
 				for(int i = 0; i < MAX_CLIENTS && NumDisplayed < MaxTees * MaxRows; i++)
 				{
-					if(!m_pClient->m_Snap.m_apPlayerInfos[i])
+					if(!GameClient()->m_Snap.m_apPlayerInfos[i])
 						continue;
-					if(m_pClient->m_Teams.Team(i) == LocalTeamID)
+					if(GameClient()->m_Teams.Team(i) == LocalTeamID)
 					{
 						bool Frozen = false;
-						CTeeRenderInfo TeeInfo = m_pClient->m_aClients[i].m_RenderInfo;
-						if(m_pClient->m_aClients[i].m_FreezeEnd > 0 || m_pClient->m_aClients[i].m_DeepFrozen)
+						CTeeRenderInfo TeeInfo = GameClient()->m_aClients[i].m_RenderInfo;
+						if(GameClient()->m_aClients[i].m_FreezeEnd > 0 || GameClient()->m_aClients[i].m_DeepFrozen)
 						{
 							if(!g_Config.m_ClShowFrozenHudSkins)
 								TeeInfo = FreezeInfo;
@@ -682,7 +682,7 @@ void CHud::RenderTextInfo()
 						CRenderTools::GetRenderTeeOffsetToRenderedTee(pIdleState, &TeeInfo, OffsetToMid);
 						vec2 TeeRenderPos(StartPos + progressiveOffset, TeeSize * (0.7f) + CurrentRow * TeeSize);
 						float Alpha = 1.0f;
-						CNetObj_Character CurChar = m_pClient->m_aClients[i].m_RenderCur;
+						CNetObj_Character CurChar = GameClient()->m_aClients[i].m_RenderCur;
 						if(g_Config.m_ClShowFrozenHudSkins && Frozen)
 						{
 							Alpha = 0.6f;
