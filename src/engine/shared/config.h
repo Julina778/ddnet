@@ -13,6 +13,9 @@
 
 // include protocol for MAX_CLIENT used in config_variables
 #include <engine/shared/protocol.h>
+
+static constexpr const char *DEFAULT_SAVED_RCON_USER = "local-server";
+
 // Alesstya1
 #define AUTOEXEC_FILE "autoexec.cfg"
 #define AUTOEXEC_CLIENT_FILE "autoexec_client.cfg"

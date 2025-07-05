@@ -1754,13 +1754,7 @@ void CGameContext::OnClientConnected(int ClientId, void *pData)
 
 	// Check which team the player should be on
 	const int StartTeam = (Spec || g_Config.m_SvTournamentMode) ? TEAM_SPECTATORS : m_pController->GetAutoTeam(ClientId);
-
-	if(m_apPlayers[ClientId])
-		delete m_apPlayers[ClientId];
-	m_apPlayers[ClientId] = new(ClientId) CPlayer(this, m_NextUniqueClientId, ClientId, StartTeam);
-	m_apPlayers[ClientId]->SetInitialAfk(Afk);
-	m_apPlayers[ClientId]->m_LastWhisperTo = LastWhisperTo;
-	m_NextUniqueClientId += 1;
+	CreatePlayer(ClientId, StartTeam, Afk, LastWhisperTo);
 
 	SendMotd(ClientId);
 	SendSettings(ClientId);
@@ -2860,7 +2854,7 @@ void CGameContext::OnKillNetMessage(const CNetMsg_Cl_Kill *pMsg, int ClientId)
 	if(m_World.m_Paused)
 		return;
 
-	if(m_VoteCloseTime && m_VoteCreator == ClientId && GetDDRaceTeam(ClientId) && (IsKickVote() || IsSpecVote()))
+	if(IsRunningKickOrSpecVote(ClientId) && GetDDRaceTeam(ClientId))
 	{
 		SendChatTarget(ClientId, "You are running a vote please try again after the vote is done!");
 		return;
@@ -4206,6 +4200,17 @@ void CGameContext::CreateAllEntities(bool Initial)
 	}
 }
 
+CPlayer *CGameContext::CreatePlayer(int ClientId, int StartTeam, bool Afk, int LastWhisperTo)
+{
+	if(m_apPlayers[ClientId])
+		delete m_apPlayers[ClientId];
+	m_apPlayers[ClientId] = new(ClientId) CPlayer(this, m_NextUniqueClientId, ClientId, StartTeam);
+	m_apPlayers[ClientId]->SetInitialAfk(Afk);
+	m_apPlayers[ClientId]->m_LastWhisperTo = LastWhisperTo;
+	m_NextUniqueClientId += 1;
+	return m_apPlayers[ClientId];
+}
+
 void CGameContext::DeleteTempfile()
 {
 	if(m_aDeleteTempfile[0] != 0)
@@ -4551,6 +4556,16 @@ void CGameContext::OnSetAuthed(int ClientId, int Level)
 			m_TeeHistorian.RecordAuthLogout(ClientId);
 		}
 	}
+}
+
+bool CGameContext::IsRunningVote(int ClientId) const
+{
+	return m_VoteCloseTime && m_VoteCreator == ClientId;
+}
+
+bool CGameContext::IsRunningKickOrSpecVote(int ClientId) const
+{
+	return IsRunningVote(ClientId) && (IsKickVote() || IsSpecVote());
 }
 
 void CGameContext::SendRecord(int ClientId)
