@@ -45,7 +45,7 @@ void CPlayer::Reset()
 	m_JoinTick = Server()->Tick();
 	delete m_pCharacter;
 	m_pCharacter = nullptr;
-	m_SpectatorId = SPEC_FREEVIEW;
+	SetSpectatorId(SPEC_FREEVIEW);
 	m_LastActionTick = Server()->Tick();
 	m_TeamChangeTick = Server()->Tick();
 	m_LastSetTeam = 0;
@@ -553,7 +553,7 @@ void CPlayer::OnDisconnect()
 	m_Moderating = false;
 }
 
-void CPlayer::OnPredictedInput(CNetObj_PlayerInput *pNewInput)
+void CPlayer::OnPredictedInput(const CNetObj_PlayerInput *pNewInput)
 {
 	// skip the input if chat is active
 	if((m_PlayerFlags & PLAYERFLAG_CHATTING) && (pNewInput->m_PlayerFlags & PLAYERFLAG_CHATTING))
@@ -571,7 +571,7 @@ void CPlayer::OnPredictedInput(CNetObj_PlayerInput *pNewInput)
 		GameServer()->SendBroadcast(g_Config.m_SvClientSuggestion, m_ClientId);
 }
 
-void CPlayer::OnDirectInput(CNetObj_PlayerInput *pNewInput)
+void CPlayer::OnDirectInput(const CNetObj_PlayerInput *pNewInput)
 {
 	Server()->SetClientFlags(m_ClientId, pNewInput->m_PlayerFlags);
 
@@ -597,7 +597,7 @@ void CPlayer::OnDirectInput(CNetObj_PlayerInput *pNewInput)
 	}
 }
 
-void CPlayer::OnPredictedEarlyInput(CNetObj_PlayerInput *pNewInput)
+void CPlayer::OnPredictedEarlyInput(const CNetObj_PlayerInput *pNewInput)
 {
 	m_PlayerFlags = pNewInput->m_PlayerFlags;
 
@@ -667,7 +667,7 @@ void CPlayer::SetTeam(int Team, bool DoChatMsg)
 	m_Team = Team;
 	m_LastSetTeam = Server()->Tick();
 	m_LastActionTick = Server()->Tick();
-	m_SpectatorId = SPEC_FREEVIEW;
+	SetSpectatorId(SPEC_FREEVIEW);
 
 	protocol7::CNetMsg_Sv_Team Msg;
 	Msg.m_ClientId = m_ClientId;
@@ -682,7 +682,7 @@ void CPlayer::SetTeam(int Team, bool DoChatMsg)
 		for(auto &pPlayer : GameServer()->m_apPlayers)
 		{
 			if(pPlayer && pPlayer->m_SpectatorId == m_ClientId)
-				pPlayer->m_SpectatorId = SPEC_FREEVIEW;
+				pPlayer->SetSpectatorId(SPEC_FREEVIEW);
 		}
 	}
 
@@ -917,10 +917,15 @@ void CPlayer::SpectatePlayerName(const char *pName)
 	{
 		if(i != m_ClientId && Server()->ClientIngame(i) && !str_comp(pName, Server()->ClientName(i)))
 		{
-			m_SpectatorId = i;
+			SetSpectatorId(i);
 			return;
 		}
 	}
+}
+
+void CPlayer::SetSpectatorId(int Id)
+{
+	m_SpectatorId = Id;
 }
 
 void CPlayer::ProcessScoreResult(CScorePlayerResult &Result)
